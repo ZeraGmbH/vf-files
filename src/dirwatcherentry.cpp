@@ -6,7 +6,12 @@ DirWatcherEntry::DirWatcherEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity, const QString componentName, const QString path, const QStringList nameFilters, QDir::Filters filters)
+bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity,
+                             const QString componentName,
+                             const QString path,
+                             const QStringList nameFilters,
+                             QDir::Filters filters,
+                             bool fullPathForResults)
 {
     bool ok = false;
     // once only
@@ -18,6 +23,7 @@ bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity, const QString comp
             // keep filters & glue
             m_nameFilters = nameFilters;
             m_filters = filters;
+            m_fullPathForResults = fullPathForResults;
             connect(&m_fileWatcher, &QFileSystemWatcher::directoryChanged, this, &DirWatcherEntry::onDirectoryChanged);
 
             // do initial populate
@@ -37,7 +43,18 @@ void DirWatcherEntry::onDirectoryChanged(const QString &path)
     QDir fileList(path);
     fileList.setFilter(m_filters);
     fileList.setNameFilters(m_nameFilters);
-    if(m_veinComponent.value() != fileList.entryList()) {
-        m_veinComponent.setValue(fileList.entryList());
+    QStringList newList(fileList.entryList());
+    if(m_fullPathForResults) {
+        for(auto& subDir : newList) {
+            if(!subDir.startsWith(path)) {
+                QDir tmpPath(path);
+                if(tmpPath.cd(subDir)) {
+                    subDir = tmpPath.path();
+                }
+            }
+        }
+    }
+    if(m_veinComponent.value() != newList) {
+        m_veinComponent.setValue(newList);
     }
 }

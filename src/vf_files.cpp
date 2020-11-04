@@ -20,13 +20,17 @@ bool vf_files::initOnce()
     return true;
 }
 
-bool vf_files::addDirToWatch(const QString dir, const QString componentName, const QStringList nameFilters, QDir::Filters filters)
+bool vf_files::addDirToWatch(const QString dir,
+                             const QString componentName,
+                             const QStringList nameFilters,
+                             QDir::Filters filters,
+                             bool fullPathForResults)
 {
     bool ok = false;
     if(m_isInitalized && !m_mapWatchDirs.contains(componentName)) { // prerequisites ok?
         // try to add another watcher component
         DirWatcherEntry* dirWatcherEntry = new DirWatcherEntry(this);
-        if(dirWatcherEntry->create(m_entity, componentName, dir, nameFilters, filters)) {
+        if(dirWatcherEntry->create(m_entity, componentName, dir, nameFilters, filters, fullPathForResults)) {
             m_mapWatchDirs[componentName] = dirWatcherEntry;
             ok = true;
         }
