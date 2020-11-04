@@ -18,7 +18,8 @@ public:
                 const QString componentName,
                 const QString path,
                 const QStringList nameFilters,
-                QDir::Filters filters);
+                QDir::Filters filters,
+                bool fullPathForResults);
 
 private:
     void onDirectoryChanged(const QString &path);
@@ -27,6 +28,7 @@ private:
     QFileSystemWatcher m_fileWatcher;
     QDir::Filters m_filters;
     QStringList m_nameFilters;
+    bool m_fullPathForResults  = false;
 };
 
 }// namespace
