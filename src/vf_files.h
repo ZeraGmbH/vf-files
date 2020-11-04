@@ -56,9 +56,14 @@ public:
      * @param componentName: the vein component name
      * @param nameFilters: list of filters to reduce matches - check QDir::setNameFilters for more details
      * @param filters: see QDir::Filters
+     * @param fullPathForResults: true: set full path in search hit list / false: just file/dir name
      * @return
      */
-    bool addDirToWatch(const QString dir, const QString componentName, const QStringList nameFilters = QStringList(), QDir::Filters filters = QDir::NoDotAndDotDot);
+    bool addDirToWatch(const QString dir,
+                       const QString componentName,
+                       const QStringList nameFilters = QStringList(),
+                       QDir::Filters filters = QDir::NoDotAndDotDot,
+                       bool fullPathForResults = false);
 
     /**
      * @brief getVeinEntity
