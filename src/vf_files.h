@@ -76,7 +76,6 @@ public:
 private:
     VfCpp::veinmoduleentity *m_entity;
     bool m_isInitalized;
-    QMap<QString, DirWatcherEntry*> m_mapWatchDirs;
 };
 
 }
