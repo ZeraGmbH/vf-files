@@ -64,6 +64,7 @@ public:
                        const QStringList nameFilters = QStringList(),
                        QDir::Filters filters = QDir::NoDotAndDotDot,
                        bool fullPathForResults = false);
+    bool addDefaultPathComponent(const QString dir, const QString componentName, bool createDir=false);
 
     /**
      * @brief getVeinEntity
