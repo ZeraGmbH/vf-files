@@ -27,11 +27,10 @@ bool vf_files::addDirToWatch(const QString dir,
                              bool fullPathForResults)
 {
     bool ok = false;
-    if(m_isInitalized && !m_mapWatchDirs.contains(componentName)) { // prerequisites ok?
+    if(m_isInitalized) { // prerequisites ok?
         // try to add another watcher component
         DirWatcherEntry* dirWatcherEntry = new DirWatcherEntry(this);
         if(dirWatcherEntry->create(m_entity, componentName, dir, nameFilters, filters, fullPathForResults)) {
-            m_mapWatchDirs[componentName] = dirWatcherEntry;
             ok = true;
         }
         else {
