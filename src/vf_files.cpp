@@ -1,5 +1,6 @@
 #include "vf_files.h"
 #include "dirwatcherentry.h"
+#include "defaultpathentry.h"
 
 using namespace vfFiles;
 
@@ -35,6 +36,22 @@ bool vf_files::addDirToWatch(const QString dir,
         }
         else {
             delete dirWatcherEntry;
+        }
+    }
+    return ok;
+}
+
+bool vf_files::addDefaultPathComponent(const QString dir, const QString componentName, bool createDir)
+{
+    bool ok = false;
+    if(m_isInitalized) { // prerequisites ok?
+        // try to add another default path component
+        DefaultPathEntry* defaultPathEntry = new DefaultPathEntry(this);
+        if(defaultPathEntry->create(m_entity, componentName, dir, createDir)) {
+            ok = true;
+        }
+        else {
+            delete defaultPathEntry;
         }
     }
     return ok;
