@@ -81,6 +81,14 @@ public:
      */
     VfCpp::veinmoduleentity *getVeinEntity() const;
 
+public slots:
+    /**
+     * @brief RPC_CopyFile
+     * @param p_params: QString p_source / QString p_dest / bool p_overwrite
+     * @return true on success
+     */
+    QVariant RPC_CopyFile(QVariantMap p_params);
+
 private:
     VfCpp::veinmoduleentity *m_entity;
     bool m_isInitalized;
