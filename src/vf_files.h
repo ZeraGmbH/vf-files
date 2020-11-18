@@ -88,6 +88,13 @@ public slots:
      * @return true on success
      */
     QVariant RPC_CopyFile(QVariantMap p_params);
+    /**
+     * @brief RPC_GetDriveInfo
+     * @param p_params: QString p_mountDir / QString p_localeName / bool p_getDriveName / bool p_getMemTotal / bool p_getMemAvail
+     * @note p_localeName is ignored in case p_getMemTotal and p_getMemAvail are not set
+     * @return QStringList list of mount information. Entries are prefixed by "name:" / "total:" / "avail:"
+     */
+    QVariant RPC_GetDriveInfo(QVariantMap p_params);
 
 private:
     VfCpp::veinmoduleentity *m_entity;
