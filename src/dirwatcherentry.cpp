@@ -45,6 +45,7 @@ void DirWatcherEntry::onDirectoryChanged(const QString &path)
     fileList.setNameFilters(m_nameFilters);
     QStringList newList(fileList.entryList());
     if(m_fullPathForResults) {
+        // prefix entries to full path
         for(auto& subDir : newList) {
             if(!subDir.startsWith(path)) {
                 QDir tmpPath(path);
