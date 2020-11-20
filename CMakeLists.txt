@@ -37,6 +37,8 @@ add_library(VfFiles SHARED
     ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.cpp
     ${PROJECT_SOURCE_DIR}/src/defaultpathentry.h
     ${PROJECT_SOURCE_DIR}/src/defaultpathentry.cpp
+    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.h
+    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.cpp
 )
 
 # link dependencies

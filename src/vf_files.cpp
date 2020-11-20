@@ -1,5 +1,6 @@
 #include "vf_files.h"
 #include "dirwatcherentry.h"
+#include "mountwatcherentry.h"
 #include "defaultpathentry.h"
 #include <QStorageInfo>
 
@@ -142,6 +143,22 @@ bool vf_files::addDirToWatch(const QString componentName,
         }
         else {
             delete dirWatcherEntry;
+        }
+    }
+    return ok;
+}
+
+bool vf_files::addMountToWatch(const QString componentName, const QString mountBasePath, const QString procFileMount)
+{
+    bool ok = false;
+    if(m_isInitalized) { // prerequisites ok?
+        // try to add another watcher component
+        MountWatcherEntry* mountWatcherEntry = new MountWatcherEntry(this);
+        if(mountWatcherEntry->create(m_entity, componentName, procFileMount, mountBasePath)) {
+            ok = true;
+        }
+        else {
+            delete mountWatcherEntry;
         }
     }
     return ok;
