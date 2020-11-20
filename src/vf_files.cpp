@@ -127,8 +127,8 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
     return listMountInfo;
 }
 
-bool vf_files::addDirToWatch(const QString dir,
-                             const QString componentName,
+bool vf_files::addDirToWatch(const QString componentName,
+                             const QString dir,
                              const QStringList nameFilters,
                              QDir::Filters filters,
                              bool fullPathForResults)
@@ -147,7 +147,7 @@ bool vf_files::addDirToWatch(const QString dir,
     return ok;
 }
 
-bool vf_files::addDefaultPathComponent(const QString dir, const QString componentName, bool createDir)
+bool vf_files::addDefaultPathComponent(const QString componentName, const QString dir, bool createDir)
 {
     bool ok = false;
     if(m_isInitalized) { // prerequisites ok?
