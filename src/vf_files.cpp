@@ -30,7 +30,7 @@ bool vf_files::initOnce()
     return true;
 }
 
-static void appendErrorMsg(QString& errorMsg, const QString appendError)
+void appendErrorMsg(QString& errorMsg, const QString appendError)
 {
     if(!errorMsg.isEmpty()) {
         errorMsg += QStringLiteral(" / ");
