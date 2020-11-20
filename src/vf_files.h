@@ -24,7 +24,7 @@ namespace vfFiles {
  * QTimer::singleShot(0, [][]{
  *      obj->initOnce()
  *      // watch external drives mounted to /media
- *      obj->addDirToWatch(QStringLiteral("/media"), QStringLiteral("MountedExternalDrives"));
+ *      obj->addDirToWatch(QStringLiteral("MountedExternalDrives"), QStringLiteral("/media"));
  * })
  * @endcode
  *
@@ -52,26 +52,26 @@ public:
     bool initOnce();
     /**
      * @brief addDirToWatch: create a component containing a list of files/dirs of a directory
-     * @param dir: the directory to scan
      * @param componentName: vein component name
+     * @param dir: the directory to scan
      * @param nameFilters: list of filters to reduce matches - check QDir::setNameFilters for more details
      * @param filters: see QDir::Filters
      * @param fullPathForResults: true: set full path in search hit list / false: just file/dir name
      * @return true on success
      */
-    bool addDirToWatch(const QString dir,
-                       const QString componentName,
+    bool addDirToWatch(const QString componentName,
+                       const QString dir,
                        const QStringList nameFilters = QStringList(),
                        QDir::Filters filters = QDir::NoDotAndDotDot,
                        bool fullPathForResults = false);
     /**
      * @brief addDefaultPathComponent: create a component containing a system wide default directory
-     * @param dir: full path of the directory
      * @param componentName: vein component name
+     * @param dir: full path of the directory
      * @param createDir: true: create direcrory
      * @return true on success
      */
-    bool addDefaultPathComponent(const QString dir, const QString componentName, bool createDir=false);
+    bool addDefaultPathComponent(const QString componentName, const QString dir, bool createDir=false);
 
     /**
      * @brief getVeinEntity
