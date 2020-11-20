@@ -65,6 +65,17 @@ public:
                        QDir::Filters filters = QDir::NoDotAndDotDot,
                        bool fullPathForResults = false);
     /**
+     * @brief addMountToWatch: create a component containing a list of mounted paths
+     * @param componentName: vein component name
+     * @param procFileMount: name of proc file to watch - somthing like '/etc/mtab' / '/proc/mounts' / '/proc/self/mounts'
+     * @param filters: see QDir::Filters
+     * @param fullPathForResults: true: set full path in search hit list / false: just file/dir name
+     * @return true on success
+     */
+    bool addMountToWatch(const QString componentName,
+                         const QString mountBasePath,
+                         const QString procFileMount = QStringLiteral("/etc/mtab"));
+    /**
      * @brief addDefaultPathComponent: create a component containing a system wide default directory
      * @param componentName: vein component name
      * @param dir: full path of the directory
