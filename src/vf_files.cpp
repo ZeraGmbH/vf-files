@@ -8,6 +8,7 @@ using namespace vfFiles;
 
 vf_files::vf_files(QObject *parent, int id) : QObject(parent),
     m_entity(new VfCpp::veinmoduleentity(id)),
+    m_dataSizeflags(QLocale::DataSizeSIFormat),
     m_isInitalized(false)
 {
 }
@@ -26,7 +27,7 @@ bool vf_files::initOnce()
                                                              {"p_localeName", "QString"},
                                                              {"p_getDriveName", "bool"},
                                                              {"p_getMemTotal", "bool"},
-                                                             {"p_getMemAvail", "bool"}}));
+                                                             {"p_getMemFree", "bool"}}));
     }
     return true;
 }
@@ -93,7 +94,7 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
     QString localeName = p_params["p_localeName"].toString();
     bool getDriveName = p_params["p_getDriveName"].toBool();
     bool getMemTotal = p_params["p_getMemTotal"].toBool();
-    bool getMemAvail = p_params["p_getMemAvail"].toBool();
+    bool getMemFree = p_params["p_getMemFree"].toBool();
 
     bool mountExists = QFile::exists(mountDir);
     // check some obvious plausis first
@@ -108,16 +109,16 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
             if(getDriveName) {
                 listMountInfo.append(QStringLiteral("name:") + storageInfo.name());
             }
-            if(getMemTotal || getMemAvail) {
+            if(getMemTotal || getMemFree) {
                 QLocale locale(localeName);
                 qint64 bytes;
                 if(getMemTotal) {
                     bytes = storageInfo.bytesTotal();
-                    listMountInfo.append(QStringLiteral("total:") + locale.formattedDataSize(bytes));
+                    listMountInfo.append(QStringLiteral("total:") + locale.formattedDataSize(bytes, 2, m_dataSizeflags));
                 }
-                if(getMemAvail) {
-                    bytes = storageInfo.bytesAvailable();
-                    listMountInfo.append(QStringLiteral("avail:") + locale.formattedDataSize(bytes));
+                if(getMemFree) {
+                    bytes = storageInfo.bytesFree();
+                    listMountInfo.append(QStringLiteral("free:") + locale.formattedDataSize(bytes, 2, m_dataSizeflags));
                 }
             }
         }
@@ -178,6 +179,11 @@ bool vf_files::addDefaultPathComponent(const QString componentName, const QStrin
         }
     }
     return ok;
+}
+
+void vf_files::setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags)
+{
+    m_dataSizeflags = dataSizeflags;
 }
 
 VfCpp::veinmoduleentity *vf_files::getVeinEntity() const
