@@ -84,6 +84,7 @@ public:
      */
     bool addDefaultPathComponent(const QString componentName, const QString dir, bool createDir=false);
 
+
     /**
      * @brief getVeinEntity
      * @return the actual entity
@@ -99,16 +100,23 @@ public slots:
      * @return true on success
      */
     QVariant RPC_CopyFile(QVariantMap p_params);
+
     /**
-     * @brief RPC_GetDriveInfo
-     * @param p_params: QString p_mountDir / QString p_localeName / bool p_getDriveName / bool p_getMemTotal / bool p_getMemAvail
-     * @note p_localeName is ignored in case p_getMemTotal and p_getMemAvail are not set
+     * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo
+     * @param dataSizeflags: see QLocale::DataSizeFormats for further details
+     */
+    void setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags);
+    /**
+     * @brief RPC_GetDriveInfo: Return name and size information for a mounted drive
+     * @param p_params: QString p_mountDir / QString p_localeName / bool p_getDriveName / bool p_getMemTotal / bool p_getMemFree
+     * @note p_localeName is ignored in case p_getMemTotal and p_getMemFree are not set
      * @return QStringList list of mount information. Entries are prefixed by "name:" / "total:" / "avail:"
      */
     QVariant RPC_GetDriveInfo(QVariantMap p_params);
 
 private:
     VfCpp::veinmoduleentity *m_entity;
+    QLocale::DataSizeFormats m_dataSizeflags;
     bool m_isInitalized;
 };
 
