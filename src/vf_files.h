@@ -50,6 +50,7 @@ public:
      * sets up entity with EntityName component only
      */
     bool initOnce();
+
     /**
      * @brief addDirToWatch: create a component containing a list of files/dirs of a directory
      * @param componentName: vein component name
@@ -64,6 +65,7 @@ public:
                        const QStringList nameFilters = QStringList(),
                        QDir::Filters filters = QDir::NoDotAndDotDot,
                        bool fullPathForResults = false);
+
     /**
      * @brief addMountToWatch: create a component containing a list of mounted paths
      * @param componentName: vein component name
@@ -75,6 +77,7 @@ public:
     bool addMountToWatch(const QString componentName,
                          const QString mountBasePath,
                          const QString procFileMount = QStringLiteral("/etc/mtab"));
+
     /**
      * @brief addDefaultPathComponent: create a component containing a system wide default directory
      * @param componentName: vein component name
@@ -94,6 +97,7 @@ public:
     VfCpp::veinmoduleentity *getVeinEntity() const;
 
 public slots:
+
     /**
      * @brief RPC_CopyFile
      * @param p_params: QString p_source / QString p_dest / bool p_overwrite
@@ -106,6 +110,7 @@ public slots:
      * @param dataSizeflags: see QLocale::DataSizeFormats for further details
      */
     void setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags);
+
     /**
      * @brief RPC_GetDriveInfo: Return name and size information for a mounted drive
      * @param p_params: QString p_mountDir / QString p_localeName / bool p_getDriveName / bool p_getMemTotal / bool p_getMemFree
