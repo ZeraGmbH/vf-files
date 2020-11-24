@@ -53,10 +53,10 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
 
     // check some obvious plausis first
     if(!bSourceExists) {
-        appendErrorMsg(strError, sourceFile + QStringLiteral(" does not exist"));
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" does not exist"));
     }
     if(!p_overwrite && bDestExists) {
-        appendErrorMsg(strError, QStringLiteral("Cannot overwrite ") + destFile);
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: Cannot overwrite ") + destFile);
     }
 
     // ensure dest directory is there
@@ -64,7 +64,7 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
         QFileInfo destFileInfo(destFile);
         QDir destDir = destFileInfo.absoluteDir();
         if(!destDir.mkpath(destDir.path())) {
-            appendErrorMsg(strError, QStringLiteral("Cannot create directory ") + destDir.path());
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: Cannot create directory ") + destDir.path());
         }
     }
     // do copy
@@ -75,7 +75,7 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
             file.remove(destFile);
         }
         if(!file.copy(destFile)) {
-            appendErrorMsg(strError, sourceFile + QStringLiteral(" was not copied to ") + destFile);
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" was not copied to ") + destFile);
         }
     }
     bool ok = strError.isEmpty();
@@ -99,7 +99,7 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
     bool mountExists = QFile::exists(mountDir);
     // check some obvious plausis first
     if(!mountExists) {
-        appendErrorMsg(strError, mountDir + QStringLiteral(" does not exist"));
+        appendErrorMsg(strError, QStringLiteral("RPC_GetDriveInfo: ") + mountDir + QStringLiteral(" does not exist"));
     }
 
     QStringList listMountInfo;
@@ -123,7 +123,7 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
             }
         }
         else {
-            appendErrorMsg(strError, QStringLiteral("Could not create storage info for ") + mountDir);
+            appendErrorMsg(strError, QStringLiteral("RPC_GetDriveInfo: Could not create storage info for ") + mountDir);
         }
     }
     return listMountInfo;

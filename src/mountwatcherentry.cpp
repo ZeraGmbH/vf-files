@@ -69,11 +69,11 @@ bool MountWatcherEntry::create(VfCpp::veinmoduleentity *entity,
     QString strErrorMsg;
     QFile tmpFile(procFileMount);
     if(!tmpFile.exists()) {
-        appendErrorMsg(strErrorMsg, QStringLiteral("Could not find proc-file: ") + procFileMount);
+        appendErrorMsg(strErrorMsg, QStringLiteral("MountWatcherEntry::create: Could not find proc-file: ") + procFileMount);
     }
     QDir tmpDir(mountBasePath);
     if(!tmpDir.exists()) {
-        appendErrorMsg(strErrorMsg, QStringLiteral("Could not find mount-base-path: ") + mountBasePath);
+        appendErrorMsg(strErrorMsg, QStringLiteral("MountWatcherEntry::create: Could not find mount-base-path: ") + mountBasePath);
     }
 
     bool ok = strErrorMsg.isEmpty();
