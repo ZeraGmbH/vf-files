@@ -15,12 +15,19 @@ vf_files::vf_files(QObject *parent, int id) : QObject(parent),
 
 bool vf_files::initOnce()
 {
-    // create our entity once
+    // create our entity / rpcs once
     if(!m_isInitalized) {
         m_isInitalized = true;
         m_entity->initModule();
         m_entity->createComponent("EntityName", "_Files", true);
         m_entity->createRpc(this, "RPC_CopyFile", VfCpp::cVeinModuleRpc::Param({{"p_source", "QString"},{"p_dest", "QString"},{"p_overwrite", "bool"}}));
+        m_entity->createRpc(this, "RPC_CopyDirFiles",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_sourceDir", "QString"},
+                                                             {"p_destDir", "QString"},
+                                                             {"p_nameFilters", "QStringList"},
+                                                             {"p_cleanDestFirst", "bool"},
+                                                             {"p_overwrite", "bool"}}));
         m_entity->createRpc(this, "RPC_GetDriveInfo",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_mountDir", "QString"},
@@ -77,6 +84,81 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
         if(!file.copy(destFile)) {
             appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" was not copied to ") + destFile);
         }
+    }
+    bool ok = strError.isEmpty();
+    if(!ok) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
+    return ok;
+}
+
+QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
+{
+    QString sourceDirPath = p_params["p_sourceDir"].toString();
+    QString destDirPath = p_params["p_destDir"].toString();
+    QStringList nameFilters = p_params["p_nameFilters"].toStringList();
+    bool cleanDestFirst = p_params["p_cleanDestFirst"].toBool();
+    bool overwrite = p_params["p_overwrite"].toBool();
+
+    QString strError;
+    // Plausi 1.
+    if(sourceDirPath.isEmpty()) {
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_sourceDir is empty "));
+    }
+    if(destDirPath.isEmpty()) {
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_destDir is empty "));
+    }
+    // Plausi 2. + remove destination dir optionally
+    QDir sourceDir(sourceDirPath);
+    if(strError.isEmpty()) {
+        if(!sourceDir.exists()) {
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Directory to copy does not exist ") + sourceDirPath);
+        }
+        if(strError.isEmpty() && cleanDestFirst) {
+            QDir destDir(destDirPath);
+            if(destDir.exists() && !destDir.removeRecursively()) {
+                appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: An error occured deleting destination directory ") + destDirPath);
+            }
+        }
+    }
+    // ensure dest directory is there
+    if(strError.isEmpty()) {
+        QDir destDir;
+        if(!destDir.mkpath(destDirPath)) {
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Cannot create directory ") + destDir.path());
+        }
+    }
+    // copy
+    if(strError.isEmpty()) {
+        // Ensure trailing dir separator
+        if(!sourceDirPath.endsWith(QDir::separator())) {
+            sourceDirPath.append(QDir::separator());
+        }
+        if(!destDirPath.endsWith(QDir::separator())) {
+            destDirPath.append(QDir::separator());
+        }
+        sourceDir.setNameFilters(nameFilters);
+        for(QString fileName : sourceDir.entryList(QDir::NoDotAndDotDot | QDir::Files)) {
+            QString sourceFileName = sourceDirPath + fileName;
+            QString destFileName = destDirPath + fileName;
+            // ensure overwrite
+            if(overwrite && QFile::exists(destFileName)) {
+                QFile destFile(destFileName);
+                if(!destFile.remove()) {
+                    appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Cannot delete file for overwrite ") + destFileName);
+                }
+            }
+            // copy file
+            if(!QFile::copy(sourceFileName, destFileName)) {
+                appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Cannot copy ") + sourceFileName + QStringLiteral(" to ") + destFileName);
+            }
+            // Errors are not expected / accepted here. So abort on first
+            if(!strError.isEmpty()) {
+                break;
+            }
+        }
+
     }
     bool ok = strError.isEmpty();
     if(!ok) {

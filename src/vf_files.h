@@ -106,6 +106,13 @@ public slots:
     QVariant RPC_CopyFile(QVariantMap p_params);
 
     /**
+     * @brief RPC_CopyDirFiles: Simple - non recursive copy of directory
+     * @param p_params: QString p_sourceDir / QString p_destDir / QStringList p_nameFilters / bool p_cleanDestFirst / bool p_overwrite
+     * @return true on success
+     */
+    QVariant RPC_CopyDirFiles(QVariantMap p_params);
+
+    /**
      * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo
      * @param dataSizeflags: see QLocale::DataSizeFormats for further details
      */
