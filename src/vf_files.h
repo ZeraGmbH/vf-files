@@ -79,7 +79,7 @@ public:
                          const QString procFileMount = QStringLiteral("/etc/mtab"));
 
     /**
-     * @brief addDefaultPathComponent: create a component containing a system wide default directory
+     * @brief addDefaultPathComponent: create a component containing a system wide default directory ending with dir separator
      * @param componentName: vein component name
      * @param dir: full path of the directory
      * @param createDir: true: create direcrory

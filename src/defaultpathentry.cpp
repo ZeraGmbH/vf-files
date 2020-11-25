@@ -15,7 +15,12 @@ bool DefaultPathEntry::create(VfCpp::veinmoduleentity *entity, const QString com
         ok = dir.mkpath(path);
     }
     if(ok) {
-        m_veinComponent = entity->createComponent(componentName, path, true);
+        // to be consistent and to make consumers' life easier: append trailing separator
+        QString setPath = path;
+        if(!setPath.endsWith(QDir::separator())) {
+            setPath.append(QDir::separator());
+        }
+        m_veinComponent = entity->createComponent(componentName, setPath, true);
     }
     return ok;
 }
