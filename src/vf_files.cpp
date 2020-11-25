@@ -208,6 +208,10 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
             appendErrorMsg(strError, QStringLiteral("RPC_GetDriveInfo: Could not create storage info for ") + mountDir);
         }
     }
+    if(!strError.isEmpty()) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
     return listMountInfo;
 }
 
