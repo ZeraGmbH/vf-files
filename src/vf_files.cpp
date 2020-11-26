@@ -138,18 +138,22 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
         if(!destDirPath.endsWith(QDir::separator())) {
             destDirPath.append(QDir::separator());
         }
-        sourceDir.setNameFilters(nameFilters);
-        for(QString fileName : sourceDir.entryList(QDir::NoDotAndDotDot | QDir::Files)) {
-            QString sourceFileName = sourceDirPath + fileName;
+        for(QString fileName : sourceDir.entryList(nameFilters, QDir::NoDotAndDotDot | QDir::Files)) {
             QString destFileName = destDirPath + fileName;
-            // ensure overwrite
-            if(overwrite && QFile::exists(destFileName)) {
+            bool destExists = QFile::exists(destFileName);
+            // skip file in case dest exists and we do not overwrite
+            if(destExists && !overwrite) {
+                continue;
+            }
+            // overwrite: delete dest first
+            if(destExists) {
                 QFile destFile(destFileName);
                 if(!destFile.remove()) {
                     appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Cannot delete file for overwrite ") + destFileName);
                 }
             }
             // copy file
+            QString sourceFileName = sourceDirPath + fileName;
             if(!QFile::copy(sourceFileName, destFileName)) {
                 appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: Cannot copy ") + sourceFileName + QStringLiteral(" to ") + destFileName);
             }
