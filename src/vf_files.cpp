@@ -38,6 +38,9 @@ bool vf_files::initOnce()
                                                              {"p_baseDir", "QString"},
                                                              {"p_nameFilterList", "QStringList"},
                                                              {"p_returnMatchingDirsOnly", "bool"}}));
+        m_entity->createRpc(this, "RPC_DeleteFile",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_fullPathFile", "QString"}}));
         m_entity->createRpc(this, "RPC_GetDriveInfo",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_mountDir", "QString"},
@@ -281,6 +284,38 @@ QVariant vf_files::RPC_FindFileSpecial(QVariantMap p_params)
         qWarning("%s", qPrintable(strError));
     }
     return resultList;
+}
+
+QVariant vf_files::RPC_DeleteFile(QVariantMap p_params)
+{
+    QString strError;
+
+    QString fileName = p_params["p_fullPathFile"].toString();
+    QFile file(fileName);
+    if(!file.exists()) {
+        appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: File to delete %1 does not exist").arg(fileName));
+    }
+    else {
+        QFileInfo fileInfo(file);
+        if(!fileInfo.isFile()) {
+            if(fileInfo.isDir()) {
+                appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Cannot delete directory %1").arg(fileName));
+            }
+            else {
+                appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: %1 does not seem to be a file").arg(fileName));
+            }
+        }
+    }
+    if(strError.isEmpty()) {
+        if(!file.remove()) {
+            appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Could not delete file %1").arg(fileName));
+        }
+    }
+    if(!strError.isEmpty()) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
+    return strError.isEmpty();
 }
 
 QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
