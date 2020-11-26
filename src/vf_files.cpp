@@ -20,7 +20,11 @@ bool vf_files::initOnce()
         m_isInitalized = true;
         m_entity->initModule();
         m_entity->createComponent("EntityName", "_Files", true);
-        m_entity->createRpc(this, "RPC_CopyFile", VfCpp::cVeinModuleRpc::Param({{"p_source", "QString"},{"p_dest", "QString"},{"p_overwrite", "bool"}}));
+        m_entity->createRpc(this, "RPC_CopyFile",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_source", "QString"},
+                                                             {"p_dest", "QString"},
+                                                             {"p_overwrite", "bool"}}));
         m_entity->createRpc(this, "RPC_CopyDirFiles",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_sourceDir", "QString"},
