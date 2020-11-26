@@ -147,6 +147,13 @@ public slots:
     QVariant RPC_FindFileSpecial(QVariantMap p_params);
 
     /**
+     * @brief RPC_DeleteFile guess what
+     * @param p_params QString p_fullPathFile
+     * @return true on success
+     */
+    QVariant RPC_DeleteFile(QVariantMap p_params);
+
+    /**
      * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo
      * @param dataSizeflags: see QLocale::DataSizeFormats for further details
      */
