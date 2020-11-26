@@ -113,6 +113,40 @@ public slots:
     QVariant RPC_CopyDirFiles(QVariantMap p_params);
 
     /**
+     * @brief setFindLimits Set maximum limits for RPC_FindFileSpecial to avoid explosion of recursion
+     * @param maxRecursionDepth Maximum recursion depth. Check immediate on call of RPC_FindFileSpecial
+     * @param findMaxHitsDirs Maximum number of dirs to find
+     * @param findMaxHitsFiles Maximum number of files to find
+     */
+    void setFindLimits(const int maxRecursionDepth = 3, const int findMaxHitsDirs=100, const int findMaxHitsFiles = 500);
+    /**
+     * @brief RPC_FindFileSpecial: Tailored file find - recursive so handle with caution
+     *
+     * This RPC finds matching files in matching directoriers. Some notes on p_nameFilterList:
+     * @note Each list entry contains one or more filters that are separated by ';'
+     * @note The first entries are applied on directories / the last on files
+     *
+     * A note on p_returnMatchingDirsOnly:
+     * @note If set only paths containing matching files are returned. Dir-seperators are NOT appended
+     *
+     * @example
+     * To find paths with customer data to import we set
+     * p_baseDir="/media/sda1"
+     * p_nameFilterList={"zera-*-?????????", "customerdata", "*.json"}
+     * p_returnMatchingDirsOnly=true
+     * or json style
+     * {
+     *   "p_baseDir": "/media/sda1",
+     *   "p_nameFilterList": [ "zera-*-?????????", "customerdata", "*.json" ],
+     *   "p_returnMatchingDirsOnly": true
+     * }
+     *
+     * @param p_params: QString p_baseDir / QStringList p_nameFilterList / bool p_returnMatchingDirsOnly
+     * @return QStringList list of files matching
+     */
+    QVariant RPC_FindFileSpecial(QVariantMap p_params);
+
+    /**
      * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo
      * @param dataSizeflags: see QLocale::DataSizeFormats for further details
      */
@@ -127,8 +161,20 @@ public slots:
     QVariant RPC_GetDriveInfo(QVariantMap p_params);
 
 private:
+    // TODO PIMPL
+    void findInPath(const QString &baseDir,
+                    const QStringList &nameFilterList,
+                    const int currFilterOrPathDepth,
+                    const bool returMatchingDirsOnly,
+                    QStringList &resultList,
+                    QString &strError);
+
+
     VfCpp::veinmoduleentity *m_entity;
     QLocale::DataSizeFormats m_dataSizeflags;
+    int m_findMaxRecursionDepth;
+    int m_findMaxHitsDirs;
+    int m_findMaxHitsFiles;
     bool m_isInitalized;
 };
 
