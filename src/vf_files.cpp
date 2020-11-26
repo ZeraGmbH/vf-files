@@ -11,6 +11,7 @@ vf_files::vf_files(QObject *parent, int id) : QObject(parent),
     m_dataSizeflags(QLocale::DataSizeSIFormat),
     m_isInitalized(false)
 {
+    setFindLimits();
 }
 
 bool vf_files::initOnce()
@@ -32,6 +33,11 @@ bool vf_files::initOnce()
                                                              {"p_nameFilters", "QStringList"},
                                                              {"p_cleanDestFirst", "bool"},
                                                              {"p_overwrite", "bool"}}));
+        m_entity->createRpc(this, "RPC_FindFileSpecial",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_baseDir", "QString"},
+                                                             {"p_nameFilterList", "QStringList"},
+                                                             {"p_returnMatchingDirsOnly", "bool"}}));
         m_entity->createRpc(this, "RPC_GetDriveInfo",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_mountDir", "QString"},
@@ -174,6 +180,107 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
         qWarning("%s", qPrintable(strError));
     }
     return ok;
+}
+
+void vf_files::setFindLimits(const int maxRecursionDepth, const int findMaxHitsDirs, const int findMaxHitsFiles)
+{
+    m_findMaxRecursionDepth = maxRecursionDepth;
+    m_findMaxHitsDirs = findMaxHitsDirs;
+    m_findMaxHitsFiles = findMaxHitsFiles;
+}
+
+void vf_files::findInPath(const QString &baseDir,
+                const QStringList &nameFilterList,
+                const int currFilterOrPathDepth,
+                const bool returMatchingDirsOnly,
+                QStringList &resultList,
+                QString &strError)
+{
+    if(currFilterOrPathDepth >= nameFilterList.length()) {
+        appendErrorMsg(strError,
+                       QStringLiteral("RPC_FindFileSpecial: findInPaths called odd params! baseDir: %1 / nameFilterList.length() %2 / currFilterOrPathDepth %3").arg(baseDir).arg(nameFilterList.length()).arg(currFilterOrPathDepth));
+    }
+    QDir searchDir(baseDir);
+    if(!searchDir.exists()) {
+        appendErrorMsg(strError, QStringLiteral("vf_files::findInPath called with non existent baseDir ") + baseDir);
+    }
+    if(!strError.isEmpty()) {
+        return;
+    }
+
+    // first searches are on paths / the last searches for files
+    bool bSearchFiles = currFilterOrPathDepth == nameFilterList.count() - 1;
+    // nameFilterList is a list of filters. Each filter itself is a list of ';' separated filters
+    QStringList currFilterList = nameFilterList[currFilterOrPathDepth].split(QStringLiteral(";"));
+
+    // last recursion depth: on files
+    if(bSearchFiles) {
+        QStringList fileList = searchDir.entryList(currFilterList, QDir::NoDotAndDotDot | QDir::Files);
+        if(!fileList.isEmpty()) {
+            if(returMatchingDirsOnly) {
+                if(resultList.count() >= m_findMaxHitsDirs) {
+                    appendErrorMsg(strError, QStringLiteral("RPC_FindFileSpecial: maximum dirs found. Allowed: %1 / Current: %2").arg(m_findMaxHitsDirs).arg(resultList.count()));
+                }
+                else {
+                    resultList.append(baseDir);
+                }
+            }
+            else {
+                if(resultList.count() + fileList.count() >= m_findMaxHitsFiles) {
+                    appendErrorMsg(strError, QStringLiteral("RPC_FindFileSpecial: maximum files found. Allowed: %1 / Wanted: %2").arg(m_findMaxHitsFiles).arg(resultList.count()+fileList.count()));
+                    fileList = fileList.mid(0, m_findMaxHitsFiles - resultList.count());
+                }
+                // Return file with full path (otherwise results are pretty useless...)
+                QString baseDirExt = baseDir;
+                if(!baseDirExt.endsWith(QDir::separator())) {
+                    baseDirExt.append(QDir::separator());
+                }
+                for(const auto &file : fileList) {
+                    resultList += baseDirExt + file;
+                }
+            }
+        }
+    }
+    // dirs on the way
+    else {
+        QStringList dirList = searchDir.entryList(currFilterList, QDir::NoDotAndDotDot | QDir::Dirs);
+        QString subDir = baseDir;
+        if(!subDir.endsWith(QDir::separator())) {
+            subDir.append(QDir::separator());
+        }
+        // iterate through all subs recursively (and as long as no error occured)
+        for(const auto& subEntry : dirList) {
+            if(!strError.isEmpty()) {
+                break;
+            }
+            else {
+                findInPath(subDir+subEntry, nameFilterList, currFilterOrPathDepth+1, returMatchingDirsOnly, resultList, strError);
+            }
+        }
+    }
+}
+
+QVariant vf_files::RPC_FindFileSpecial(QVariantMap p_params)
+{
+    QString baseDir = p_params["p_baseDir"].toString();
+    QStringList nameFilterList = p_params["p_nameFilterList"].toStringList();
+    bool returMatchingDirsOnly = p_params["p_returnMatchingDirsOnly"].toBool();
+
+    // Don't block our machine if bad guys come around
+    QString strError;
+    if(nameFilterList.count() > m_findMaxRecursionDepth) {
+        appendErrorMsg(strError, QStringLiteral("RPC_FindFileSpecial: nameFilterList.count() exceeds max. recursion depth. Allowed: %1 / Set: %2").arg(m_findMaxRecursionDepth).arg(nameFilterList.count()));
+    }
+    QStringList resultList;
+    if(strError.isEmpty()) {
+        // Start recursive traversing...
+        findInPath(baseDir, nameFilterList, 0, returMatchingDirsOnly, resultList, strError);
+    }
+    if(!strError.isEmpty()) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
+    return resultList;
 }
 
 QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
