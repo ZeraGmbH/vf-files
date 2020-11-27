@@ -122,6 +122,13 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
     if(destDirPath.isEmpty()) {
         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_destDir is empty "));
     }
+    // Ensure trailing dir separator
+    if(!sourceDirPath.endsWith(QDir::separator())) {
+        sourceDirPath.append(QDir::separator());
+    }
+    if(!destDirPath.endsWith(QDir::separator())) {
+        destDirPath.append(QDir::separator());
+    }
     // Plausi 2. + remove destination dir optionally
     QDir sourceDir(sourceDirPath);
     if(strError.isEmpty()) {
@@ -130,12 +137,18 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
         }
         if(strError.isEmpty() && cleanDestFirst) {
             QDir destDir(destDirPath);
-            if(destDir.exists() && !destDir.removeRecursively()) {
-                appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: An error occured deleting destination directory ") + destDirPath);
+            if(destDir.exists()) {
+                for(QString fileName : destDir.entryList(nameFilters, QDir::NoDotAndDotDot | QDir::Files)) {
+                    QString fullFileName = destDirPath + fileName;
+                    QFile fileToDelete(fullFileName);
+                    if(!fileToDelete.remove()) {
+                        appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: An error occured deleting file ") + fullFileName);
+                    }
+                }
             }
         }
     }
-    // ensure dest directory is there
+    // ensure dest directory is there (this might not work due to ownership conflicts - TODO??)
     if(strError.isEmpty()) {
         QDir destDir;
         if(!destDir.mkpath(destDirPath)) {
@@ -144,13 +157,6 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
     }
     // copy
     if(strError.isEmpty()) {
-        // Ensure trailing dir separator
-        if(!sourceDirPath.endsWith(QDir::separator())) {
-            sourceDirPath.append(QDir::separator());
-        }
-        if(!destDirPath.endsWith(QDir::separator())) {
-            destDirPath.append(QDir::separator());
-        }
         for(QString fileName : sourceDir.entryList(nameFilters, QDir::NoDotAndDotDot | QDir::Files)) {
             QString destFileName = destDirPath + fileName;
             bool destExists = QFile::exists(destFileName);
