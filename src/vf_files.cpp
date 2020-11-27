@@ -143,6 +143,7 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
                     QFile fileToDelete(fullFileName);
                     if(!fileToDelete.remove()) {
                         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: An error occured deleting file ") + fullFileName);
+                        break;
                     }
                 }
             }
