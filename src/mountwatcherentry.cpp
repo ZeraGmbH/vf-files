@@ -28,7 +28,7 @@ void MountWatcherWorker::startPoll()
     if(procFile.open(QIODevice::ReadOnly)) {
         // initial read
         readProcFile(procFile);
-        // this is an ifinite loop -> this thread's event loop is dead after start
+        // infinite loop waking poll once watched file changed
         do {
             ev.events = POLLERR | POLLPRI;
             ev.fd = procFile.handle();
