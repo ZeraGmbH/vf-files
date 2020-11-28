@@ -158,6 +158,7 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
     }
     // copy
     if(strError.isEmpty()) {
+        // TODO: Avoid dumb copying of invalid files: We need validators here
         for(QString fileName : sourceDir.entryList(nameFilters, QDir::NoDotAndDotDot | QDir::Files)) {
             QString destFileName = destDirPath + fileName;
             bool destExists = QFile::exists(destFileName);
