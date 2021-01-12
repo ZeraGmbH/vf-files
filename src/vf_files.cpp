@@ -44,10 +44,7 @@ bool vf_files::initOnce()
         m_entity->createRpc(this, "RPC_GetDriveInfo",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_mountDir", "QString"},
-                                                             {"p_localeName", "QString"},
-                                                             {"p_getDriveName", "bool"},
-                                                             {"p_getMemTotal", "bool"},
-                                                             {"p_getMemFree", "bool"}}));
+                                                             {"p_localeName", "QString"}}));
     }
     return true;
 }
@@ -331,9 +328,6 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
 
     QString mountDir = p_params["p_mountDir"].toString();
     QString localeName = p_params["p_localeName"].toString();
-    bool getDriveName = p_params["p_getDriveName"].toBool();
-    bool getMemTotal = p_params["p_getMemTotal"].toBool();
-    bool getMemFree = p_params["p_getMemFree"].toBool();
 
     bool mountExists = QFile::exists(mountDir);
     // check some obvious plausis first
@@ -345,21 +339,12 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
     if(strError.isEmpty()) {
         QStorageInfo storageInfo(mountDir);
         if(storageInfo.isValid()) {
-            if(getDriveName) {
-                listMountInfo.append(QStringLiteral("name:") + storageInfo.name());
-            }
-            if(getMemTotal || getMemFree) {
-                QLocale locale(localeName);
-                qint64 bytes;
-                if(getMemTotal) {
-                    bytes = storageInfo.bytesTotal();
-                    listMountInfo.append(QStringLiteral("total:") + locale.formattedDataSize(bytes, 2, m_dataSizeflags));
-                }
-                if(getMemFree) {
-                    bytes = storageInfo.bytesFree();
-                    listMountInfo.append(QStringLiteral("free:") + locale.formattedDataSize(bytes, 2, m_dataSizeflags));
-                }
-            }
+            listMountInfo.append(QStringLiteral("name:") + storageInfo.name());
+            QLocale locale(localeName);
+            qint64 bytesTotal = storageInfo.bytesTotal();
+            listMountInfo.append(QStringLiteral("total:") + locale.formattedDataSize(bytesTotal, 2, m_dataSizeflags));
+            qint64 bytesFree = storageInfo.bytesFree();
+            listMountInfo.append(QStringLiteral("free:") + locale.formattedDataSize(bytesFree, 2, m_dataSizeflags));
         }
         else {
             appendErrorMsg(strError, QStringLiteral("RPC_GetDriveInfo: Could not create storage info for ") + mountDir);

@@ -161,8 +161,8 @@ public slots:
 
     /**
      * @brief RPC_GetDriveInfo: Return name and size information for a mounted drive
-     * @param p_params: QString p_mountDir / QString p_localeName / bool p_getDriveName / bool p_getMemTotal / bool p_getMemFree
-     * @note p_localeName is ignored in case p_getMemTotal and p_getMemFree are not set
+     * @param p_params: QString p_mountDir / QString p_localeName
+     * @note p_localeName due to returning localized string something as 'de_DE' or 'en_GB' is expected
      * @return QStringList list of mount information. Entries are prefixed by "name:" / "total:" / "avail:"
      */
     QVariant RPC_GetDriveInfo(QVariantMap p_params);
