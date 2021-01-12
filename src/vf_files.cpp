@@ -345,6 +345,8 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
             listMountInfo.append(QStringLiteral("total:") + locale.formattedDataSize(bytesTotal, 2, m_dataSizeflags));
             qint64 bytesFree = storageInfo.bytesFree();
             listMountInfo.append(QStringLiteral("free:") + locale.formattedDataSize(bytesFree, 2, m_dataSizeflags));
+            double bytesFreePercent = double(bytesFree) / double(bytesTotal) * 100.0;
+            listMountInfo.append(QStringLiteral("percent_free:") + locale.toString(bytesFreePercent, 'g', 3) + QStringLiteral("%"));
         }
         else {
             appendErrorMsg(strError, QStringLiteral("RPC_GetDriveInfo: Could not create storage info for ") + mountDir);
