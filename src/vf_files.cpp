@@ -45,6 +45,10 @@ bool vf_files::initOnce()
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_mountDir", "QString"},
                                                              {"p_localeName", "QString"}}));
+        m_entity->createRpc(this, "RPC_GetFileInfo",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_fileName", "QString"},
+                                                             {"p_localeName", "QString"}}));
     }
     return true;
 }
@@ -357,6 +361,38 @@ QVariant vf_files::RPC_GetDriveInfo(QVariantMap p_params)
         qWarning("%s", qPrintable(strError));
     }
     return listMountInfo;
+}
+
+QVariant vf_files::RPC_GetFileInfo(QVariantMap p_params)
+{
+    QString strError;
+
+    QString fileName = p_params["p_fileName"].toString();
+    QString localeName = p_params["p_localeName"].toString();
+
+    QFileInfo fileInfo(fileName);
+    // check some obvious plausis first
+    if(!fileInfo.exists()) {
+        appendErrorMsg(strError, QStringLiteral("RPC_GetFileInfo: ") + fileName + QStringLiteral(" does not exist"));
+    }
+    if(!fileInfo.isFile()) {
+        appendErrorMsg(strError, QStringLiteral("RPC_GetFileInfo: ") + fileName + QStringLiteral(" is not a file"));
+    }
+
+    QStringList listFileInfo;
+    if(strError.isEmpty()) {
+        listFileInfo.append(QStringLiteral("p_fileName:") + fileName); // for identification purpose on multiple call
+        listFileInfo.append(QStringLiteral("fullname:") + fileInfo.filePath());
+        listFileInfo.append(QStringLiteral("filename:") + fileInfo.fileName());
+        QLocale locale(localeName);
+        qint64 size = fileInfo.size();
+        listFileInfo.append(QStringLiteral("size:") + locale.formattedDataSize(size, 2, m_dataSizeflags));
+    }
+    if(!strError.isEmpty()) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
+    return listFileInfo;
 }
 
 bool vf_files::addDirToWatch(const QString componentName,

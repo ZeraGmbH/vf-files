@@ -154,8 +154,8 @@ public slots:
     QVariant RPC_DeleteFile(QVariantMap p_params);
 
     /**
-     * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo
-     * @param dataSizeflags: see QLocale::DataSizeFormats for further details
+     * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo/RPC_GetFileInfo
+     * @param dataSizeflags: default is QLocale::DataSizeSIFormat - see QLocale::DataSizeFormats for further details
      */
     void setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags);
 
@@ -166,6 +166,14 @@ public slots:
      * @return QStringList list of mount information. Entries are prefixed by "name:" / "total:" / "avail:"
      */
     QVariant RPC_GetDriveInfo(QVariantMap p_params);
+
+    /**
+     * @brief RPC_GetFileInfo: Return information of a file given in param
+     * @param p_params: QString p_fileName / QString p_localeName
+     * @note p_localeName due to returning localized string something as 'de_DE' or 'en_GB' is expected
+     * @return QStringList list file information. Entries are prefixed by "p_fileName:" / "fullname:" / "filename:" / "size:"
+     */
+    QVariant RPC_GetFileInfo(QVariantMap p_params);
 
 private:
     // TODO PIMPL
