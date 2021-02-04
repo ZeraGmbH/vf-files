@@ -9,7 +9,7 @@
 using namespace vfFiles;
 
 vf_files::vf_files(QObject *parent, int id) : QObject(parent),
-    m_entity(new VfCpp::veinmoduleentity(id)),
+    m_entity(new VfCpp::VeinModuleEntity(id)),
     m_dataSizeflags(QLocale::DataSizeSIFormat),
     m_isInitalized(false)
 {
@@ -22,7 +22,7 @@ bool vf_files::initOnce()
     if(!m_isInitalized) {
         m_isInitalized = true;
         m_entity->initModule();
-        m_entity->createComponent("EntityName", "_Files", true);
+        m_entity->createComponent("EntityName", "_Files", VfCpp::cVeinModuleComponent::Direction::out);
         m_entity->createRpc(this, "RPC_CopyFile",
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_source", "QString"},
@@ -504,7 +504,8 @@ void vf_files::setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags)
     m_dataSizeflags = dataSizeflags;
 }
 
-VfCpp::veinmoduleentity *vf_files::getVeinEntity() const
+
+VfCpp::VeinModuleEntity *vf_files::getVeinEntity() const
 {
     return m_entity;
 }

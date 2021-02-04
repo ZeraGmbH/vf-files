@@ -6,7 +6,7 @@ DirWatcherEntry::DirWatcherEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity,
+bool DirWatcherEntry::create(VfCpp::VeinModuleEntity *entity,
                              const QString componentName,
                              const QString path,
                              const QStringList nameFilters,
@@ -18,7 +18,7 @@ bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity,
     if(m_fileWatcher.directories().isEmpty()) {
         if(m_fileWatcher.addPath(path)) {
             // create vein component
-            m_veinComponent = entity->createComponent(componentName, QStringList(), true);
+            m_veinComponent = entity->createComponent(componentName, QStringList(), VfCpp::cVeinModuleComponent::Direction::out);
 
             // keep filters & glue
             m_nameFilters = nameFilters;

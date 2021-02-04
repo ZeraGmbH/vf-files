@@ -1,8 +1,7 @@
 #ifndef DIRWATCHERENTRY_H
 #define DIRWATCHERENTRY_H
 
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vfcpp.h>
 #include <QObject>
 #include <QDir>
 #include <QFileSystemWatcher>
@@ -14,7 +13,7 @@ class DirWatcherEntry : public QObject
     Q_OBJECT
 public:
     explicit DirWatcherEntry(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VeinModuleEntity* entity,
                 const QString componentName,
                 const QString path,
                 const QStringList nameFilters,
@@ -24,7 +23,7 @@ public:
 private:
     void onDirectoryChanged(const QString &path);
 
-    VfCpp::VeinCompProxy<QStringList> m_veinComponent;
+    VfCpp::VeinSharedComp<QStringList> m_veinComponent;
     QFileSystemWatcher m_fileWatcher;
     QDir::Filters m_filters;
     QStringList m_nameFilters;

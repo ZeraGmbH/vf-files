@@ -94,7 +94,7 @@ public:
      *
      * Take the return value and add it to the top EventHandler system
      */
-    VfCpp::veinmoduleentity *getVeinEntity() const;
+    VfCpp::VeinModuleEntity *getVeinEntity() const;
 
 public slots:
 
@@ -192,7 +192,7 @@ private:
                     QString &strError);
 
 
-    VfCpp::veinmoduleentity *m_entity;
+    VfCpp::VeinModuleEntity *m_entity;
     QLocale::DataSizeFormats m_dataSizeflags;
     int m_findMaxRecursionDepth;
     int m_findMaxHitsDirs;

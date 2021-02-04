@@ -1,8 +1,7 @@
 #ifndef MOUNTWATCHERENTRY_H
 #define MOUNTWATCHERENTRY_H
 
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vfcpp.h>
 #include <QFile>
 
 namespace vfFiles {
@@ -12,7 +11,7 @@ class MountWatcherEntry : public QObject
     Q_OBJECT
 public:
     explicit MountWatcherEntry(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VeinModuleEntity* entity,
                 const QString componentName,
                 const QString procFileMount,
                 const QString mountBasePath);
@@ -21,7 +20,7 @@ public slots:
     void onMountsChanged(const QStringList mounts);
 
 private:
-    VfCpp::VeinCompProxy<QStringList> m_veinComponent;
+    VfCpp::VeinSharedComp<QStringList> m_veinComponent;
     Qt::HANDLE m_threadID;
 };
 

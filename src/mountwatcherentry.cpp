@@ -60,7 +60,7 @@ MountWatcherEntry::MountWatcherEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool MountWatcherEntry::create(VfCpp::veinmoduleentity *entity,
+bool MountWatcherEntry::create(VfCpp::VeinModuleEntity *entity,
                                const QString componentName,
                                const QString procFileMount,
                                const QString mountBasePath)
@@ -94,7 +94,7 @@ bool MountWatcherEntry::create(VfCpp::veinmoduleentity *entity,
         m_threadID = QThread::currentThreadId();
 
         // create vein component
-        m_veinComponent = entity->createComponent(componentName, QStringList(), true);
+        m_veinComponent = entity->createComponent(componentName, QStringList(), VfCpp::cVeinModuleComponent::Direction::out);
 
         thread->start();
     }

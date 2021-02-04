@@ -5,7 +5,7 @@ DefaultPathEntry::DefaultPathEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool DefaultPathEntry::create(VfCpp::veinmoduleentity *entity, const QString componentName, const QString path, const bool create)
+bool DefaultPathEntry::create(VfCpp::VeinModuleEntity *entity, const QString componentName, const QString path, const bool create)
 {
     bool ok = true;
     // first try to create if we are asked for
@@ -20,7 +20,8 @@ bool DefaultPathEntry::create(VfCpp::veinmoduleentity *entity, const QString com
         if(!setPath.endsWith(QDir::separator())) {
             setPath.append(QDir::separator());
         }
-        m_veinComponent = entity->createComponent(componentName, setPath, true);
+
+        m_veinComponent = entity->createComponent(componentName, path, VfCpp::cVeinModuleComponent::Direction::out);
     }
     return ok;
 }

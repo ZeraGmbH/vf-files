@@ -2,21 +2,20 @@
 #define DEFAULTPATHENTRY_H
 
 #include <QObject>
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vfcpp.h>
 
 class DefaultPathEntry : public QObject
 {
     Q_OBJECT
 public:
     explicit DefaultPathEntry(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VeinModuleEntity* entity,
                 const QString componentName,
                 const QString path,
                 const bool create);
 
 private:
-    VfCpp::VeinCompProxy<QStringList> m_veinComponent;
+    VfCpp::VeinSharedComp<QStringList> m_veinComponent;
 
 };
 
