@@ -154,6 +154,13 @@ public slots:
     QVariant RPC_DeleteFile(QVariantMap p_params);
 
     /**
+     * @brief RPC_FSyncPath sync file or directory (all files included/no traverse subdirs) to ensure data was written (e.g to external drive)
+     * @param p_params QString p_fullPath
+     * @return true on success
+     */
+    QVariant RPC_FSyncPath(QVariantMap p_params);
+
+    /**
      * @brief setDataSizeFormat: Set format for representation of data quantities in RPC_GetDriveInfo/RPC_GetFileInfo
      * @param dataSizeflags: default is QLocale::DataSizeSIFormat - see QLocale::DataSizeFormats for further details
      */
