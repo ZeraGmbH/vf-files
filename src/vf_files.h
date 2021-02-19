@@ -99,7 +99,7 @@ public:
 public slots:
 
     /**
-     * @brief RPC_CopyFile
+     * @brief RPC_CopyFile: If not exist: Create target directory / Copy file
      * @param p_params: QString p_source / QString p_dest / bool p_overwrite
      * @return true on success
      */
