@@ -3,6 +3,8 @@
 #include "mountwatcherentry.h"
 #include "defaultpathentry.h"
 #include <QStorageInfo>
+#include <unistd.h>
+#include <fcntl.h>
 
 using namespace vfFiles;
 
@@ -49,6 +51,9 @@ bool vf_files::initOnce()
                             VfCpp::cVeinModuleRpc::Param({
                                                              {"p_fileName", "QString"},
                                                              {"p_localeName", "QString"}}));
+        m_entity->createRpc(this, "RPC_FSyncPath",
+                            VfCpp::cVeinModuleRpc::Param({
+                                                             {"p_fullPath", "QString"}}));
     }
     return true;
 }
@@ -318,6 +323,86 @@ QVariant vf_files::RPC_DeleteFile(QVariantMap p_params)
         if(!file.remove()) {
             appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Could not delete file %1").arg(fileName));
         }
+    }
+    if(!strError.isEmpty()) {
+        // drop a note to whoever listens (usually journal)
+        qWarning("%s", qPrintable(strError));
+    }
+    return strError.isEmpty();
+}
+
+QVariant vf_files::RPC_FSyncPath(QVariantMap p_params)
+{
+    QString strError;
+
+    QString path = p_params["p_fullPath"].toString();
+    // check some obvious plausis first
+    QFileInfo pathInfo = QFileInfo(path);
+    QString pathToSync;
+    if(pathInfo.exists()) {
+        int fileDesc = -1;
+        // sync files in directory
+        if(pathInfo.isDir()) {
+            if(!path.endsWith("/")) {
+                path += "/";
+            }
+            QDir dir(path);
+            QStringList filesInDir = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
+            // Note: we do not abort loop in case of error to sync as much
+            // files as possible
+            for(const auto& fileName : filesInDir) {
+                QString fullName = path + fileName;
+                fileDesc = open(fullName.toUtf8().data(), O_RDONLY);
+                if(fileDesc > 0) {
+                    if(fsync(fileDesc) != 0) {
+                        appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync file ") + fullName);
+                    }
+                    else {
+                        qInfo("RPC_FSyncPath: file %s was fsynced successfully", qPrintable(fullName));
+                    }
+                    close(fileDesc);
+                }
+                else {
+                    appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open file ") + fullName);
+                }
+            }
+            pathToSync = path;
+        }
+        // sync file
+        else {
+            fileDesc = open(path.toUtf8().data(), O_RDONLY);
+            if(fileDesc) {
+                if(fsync(fileDesc) != 0) {
+                    appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync file ") + path);
+                }
+                else {
+                    qInfo("RPC_FSyncPath: file %s was fsynced successfully", qPrintable(path));
+                }
+                close(fileDesc);
+            }
+            else {
+                appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open file ") + path);
+            }
+            pathToSync = pathInfo.absolutePath();
+        }
+        // sync dir
+        fileDesc = open(pathToSync.toUtf8().data(), O_RDONLY);
+        if(fileDesc > 0) {
+            if(fsync(fileDesc) != 0) {
+                appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync dir ") + path);
+            }
+            else {
+                qInfo("RPC_FSyncPath: dir %s was fsynced successfully", qPrintable(pathToSync));
+            }
+            close(fileDesc);
+        }
+        else {
+            appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open path ") + path);
+        }
+
+    }
+    else {
+        appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: ") + path + QStringLiteral(" does not exist"));
     }
     if(!strError.isEmpty()) {
         // drop a note to whoever listens (usually journal)
