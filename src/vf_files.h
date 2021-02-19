@@ -147,7 +147,7 @@ public slots:
     QVariant RPC_FindFileSpecial(QVariantMap p_params);
 
     /**
-     * @brief RPC_DeleteFile guess what
+     * @brief RPC_DeleteFile delete a single file (no directory)
      * @param p_params QString p_fullPathFile
      * @return true on success
      */
