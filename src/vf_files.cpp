@@ -3,6 +3,8 @@
 #include "mountwatcherentry.h"
 #include "defaultpathentry.h"
 #include <QStorageInfo>
+#include <QEventLoop>
+#include <QTimer>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -346,55 +348,32 @@ QVariant vf_files::RPC_FSyncPath(QVariantMap p_params)
             if(!path.endsWith("/")) {
                 path += "/";
             }
-            QDir dir(path);
-            QStringList filesInDir = dir.entryList(QDir::NoDotAndDotDot | QDir::Files);
-            // Note: we do not abort loop in case of error to sync as much
-            // files as possible
-            for(const auto& fileName : filesInDir) {
-                QString fullName = path + fileName;
-                fileDesc = open(fullName.toUtf8().data(), O_RDONLY);
-                if(fileDesc > 0) {
-                    if(fsync(fileDesc) != 0) {
-                        appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync file ") + fullName);
-                    }
-                    else {
-                        qInfo("RPC_FSyncPath: file %s was fsynced successfully", qPrintable(fullName));
-                    }
-                    close(fileDesc);
-                }
-                else {
-                    appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open file ") + fullName);
-                }
-            }
             pathToSync = path;
         }
         // sync file
         else {
-            fileDesc = open(path.toUtf8().data(), O_RDONLY);
-            if(fileDesc) {
-                if(fsync(fileDesc) != 0) {
-                    appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync file ") + path);
-                }
-                else {
-                    qInfo("RPC_FSyncPath: file %s was fsynced successfully", qPrintable(path));
-                }
-                close(fileDesc);
-            }
-            else {
-                appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open file ") + path);
-            }
             pathToSync = pathInfo.absolutePath();
         }
         // sync dir
         fileDesc = open(pathToSync.toUtf8().data(), O_RDONLY);
         if(fileDesc > 0) {
-            if(fsync(fileDesc) != 0) {
+            if(syncfs(fileDesc) != 0) {
                 appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not sync dir ") + path);
             }
             else {
-                qInfo("RPC_FSyncPath: dir %s was fsynced successfully", qPrintable(pathToSync));
+                qInfo("RPC_FSyncPath: dir %s was syncfs'd successfully", qPrintable(pathToSync));
             }
             close(fileDesc);
+            if(strError.isEmpty()) {
+                // This is not a beauty:
+                // Wait additional 1s (did not find a better way for this). The
+                // syncronous event-loop dance should not do harm:
+                // we are runnung in a seperate therad with seperate event loop
+                QEventLoop loop;
+                QTimer::singleShot(1000, &loop, &QEventLoop::quit);
+                loop.exec(QEventLoop::AllEvents);
+                qInfo("RPC_FSyncPath: wait finished");
+            }
         }
         else {
             appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open path ") + path);
