@@ -3,8 +3,6 @@
 #include "mountwatcherentry.h"
 #include "defaultpathentry.h"
 #include <QStorageInfo>
-#include <QEventLoop>
-#include <QTimer>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -364,16 +362,6 @@ QVariant vf_files::RPC_FSyncPath(QVariantMap p_params)
                 qInfo("RPC_FSyncPath: dir %s was syncfs'd successfully", qPrintable(pathToSync));
             }
             close(fileDesc);
-            if(strError.isEmpty()) {
-                // This is not a beauty:
-                // Wait additional 1s (did not find a better way for this). The
-                // syncronous event-loop dance should not do harm:
-                // we are runnung in a seperate therad with seperate event loop
-                QEventLoop loop;
-                QTimer::singleShot(1000, &loop, &QEventLoop::quit);
-                loop.exec(QEventLoop::AllEvents);
-                qInfo("RPC_FSyncPath: wait finished");
-            }
         }
         else {
             appendErrorMsg(strError, QStringLiteral("RPC_FSyncPath: Could not open path ") + path);
