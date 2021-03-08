@@ -14,6 +14,7 @@ vf_files::vf_files(QObject *parent, int id) : QObject(parent),
     m_isInitalized(false)
 {
     setFindLimits();
+    QObject::connect(m_entity,&VfCpp::VeinModuleEntity::sigAttached,this,&vf_files::initOnce);
 }
 
 bool vf_files::initOnce()
@@ -21,7 +22,6 @@ bool vf_files::initOnce()
     // create our entity / rpcs once
     if(!m_isInitalized) {
         m_isInitalized = true;
-        m_entity->initModule();
         m_entity->createComponent("EntityName", "_Files", VfCpp::cVeinModuleComponent::Direction::out);
         m_entity->createRpc(this, "RPC_CopyFile",
                             VfCpp::cVeinModuleRpc::Param({
