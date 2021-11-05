@@ -2,8 +2,8 @@
 #define DEFAULTPATHENTRY_H
 
 #include <QObject>
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vf-cpp-entity.h>
+#include <vf-cpp-compproxy.h>
 
 class DefaultPathEntry : public QObject
 {

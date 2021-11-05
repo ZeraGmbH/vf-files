@@ -1,7 +1,7 @@
 #ifndef VF_FILES_H
 #define VF_FILES_H
 
-#include <veinmoduleentity.h>
+#include <vf-cpp-entity.h>
 #include <QObject>
 #include <QDir>
 
