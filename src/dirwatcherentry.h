@@ -1,8 +1,8 @@
 #ifndef DIRWATCHERENTRY_H
 #define DIRWATCHERENTRY_H
 
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vf-cpp-entity.h>
+#include <vf-cpp-compproxy.h>
 #include <QObject>
 #include <QDir>
 #include <QFileSystemWatcher>

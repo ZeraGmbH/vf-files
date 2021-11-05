@@ -1,8 +1,8 @@
 #ifndef MOUNTWATCHERENTRY_H
 #define MOUNTWATCHERENTRY_H
 
-#include <veinmoduleentity.h>
-#include <veincompproxy.h>
+#include <vf-cpp-entity.h>
+#include <vf-cpp-compproxy.h>
 #include <QFile>
 
 namespace vfFiles {
