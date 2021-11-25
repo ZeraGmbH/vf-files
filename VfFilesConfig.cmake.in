@@ -1,8 +1,7 @@
 include(CMakeFindDependencyMacro)
 
-
 # dependencies
-find_dependency(Qt5 COMPONENTS Core REQUIRED)
+find_dependency(Qt5 COMPONENTS Core SerialPort REQUIRED)
 find_dependency(VfHelpers REQUIRED)
 find_dependency(VfEvent REQUIRED)
 find_dependency(VfComponent REQUIRED)

@@ -22,7 +22,7 @@ include(FeatureSummary)
 include(GNUInstallDirs)
 
 # Find dependecies
-find_package(Qt5 REQUIRED COMPONENTS Core CONFIG)
+find_package(Qt5 REQUIRED COMPONENTS Core SerialPort CONFIG)
 find_package(VfHelpers REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfComponent REQUIRED)
@@ -39,12 +39,15 @@ add_library(VfFiles SHARED
     ${PROJECT_SOURCE_DIR}/src/defaultpathentry.cpp
     ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.h
     ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.cpp
+    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.h
+    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.cpp
 )
 
 # link dependencies
 target_link_libraries(VfFiles 
     PRIVATE
     Qt5::Core
+    Qt5::SerialPort
     VeinMeta::VfHelpers
     VeinMeta::VfEvent
     VeinMeta::VfComponent
