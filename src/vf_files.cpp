@@ -2,6 +2,7 @@
 #include "dirwatcherentry.h"
 #include "mountwatcherentry.h"
 #include "defaultpathentry.h"
+#include "serialdevicewatcher.h"
 #include <QStorageInfo>
 #include <unistd.h>
 #include <fcntl.h>
@@ -494,6 +495,21 @@ bool vf_files::addDefaultPathComponent(const QString componentName, const QStrin
         }
         else {
             delete defaultPathEntry;
+        }
+    }
+    return ok;
+}
+
+bool vf_files::addTtyWatcher(const QString componentName)
+{
+    bool ok = false;
+    if(m_isInitalized) { // prerequisites ok?
+        SerialDeviceWatcher* ttyWatcher = new SerialDeviceWatcher(this);
+        if(ttyWatcher->create(m_entity, componentName)) {
+            ok = true;
+        }
+        else {
+            delete ttyWatcher;
         }
     }
     return ok;

@@ -87,6 +87,12 @@ public:
      */
     bool addDefaultPathComponent(const QString componentName, const QString dir, bool createDir=false);
 
+    /**
+     * @brief addTtyWatcher: create a component containing JSON wia all serial ports
+     * @param componentName: vein component name
+     * @return
+     */
+    bool addTtyWatcher(const QString componentName);
 
     /**
      * @brief getVeinEntity
