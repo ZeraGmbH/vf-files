@@ -5,7 +5,6 @@ namespace vfFiles {
 
 SerialDeviceWatcher::SerialDeviceWatcher(QObject *parent) : QObject(parent)
 {
-
 }
 
 bool SerialDeviceWatcher::create(VfCpp::veinmoduleentity *entity, const QString componentName)
