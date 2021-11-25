@@ -28,7 +28,6 @@ bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity,
 
             // do initial populate
             onDirectoryChanged(path);
-
             ok = true;
         }
     }
