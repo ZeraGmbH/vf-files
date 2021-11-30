@@ -14,7 +14,7 @@ bool SerialDeviceWatcher::create(VfCpp::veinmoduleentity *entity, const QString 
         m_veinComponent = entity->createComponent(componentName, QJsonObject(), true);
         connect(&m_periodicPollTimer, &QTimer::timeout,
                 this, &SerialDeviceWatcher::onTimer);
-        m_periodicPollTimer.start(1000);
+        m_periodicPollTimer.start(500);
         created = true;
     }
     return created;
