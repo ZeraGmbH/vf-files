@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QJsonObject>
+#include <QFileInfoList>
 #include <vf-cpp-entity.h>
 #include <vf-cpp-component.h>
 
@@ -24,7 +25,7 @@ private:
 
     cVeinModuleComponent::Ptr m_veinComponent = nullptr;
     QTimer m_periodicPollTimer;
-
+    QFileInfoList m_LastUSBSerialDevsFound;
 };
 
 }// namespace
