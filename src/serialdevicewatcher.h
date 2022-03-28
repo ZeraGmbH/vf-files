@@ -22,6 +22,7 @@ public:
 
 private:
     void onTimer();
+    void updateUsbSerialDevicesDetails();
 
     cVeinModuleComponent::Ptr m_veinComponent = nullptr;
     QTimer m_periodicPollTimer;
