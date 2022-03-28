@@ -30,6 +30,10 @@ void SerialDeviceWatcher::onTimer()
     const QFileInfoList fileInfos = ttySysClassDir.entryInfoList();
     if(fileInfos != m_LastUSBSerialDevsFound) {
         m_LastUSBSerialDevsFound = fileInfos;
+        m_usbChangeDetected = true;
+    }
+    else if(m_usbChangeDetected) {
+        m_usbChangeDetected = false;
         updateUsbSerialDevicesDetails();
     }
 }

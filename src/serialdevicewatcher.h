@@ -27,6 +27,7 @@ private:
     cVeinModuleComponent::Ptr m_veinComponent = nullptr;
     QTimer m_periodicPollTimer;
     QFileInfoList m_LastUSBSerialDevsFound;
+    bool m_usbChangeDetected = false;
 };
 
 }// namespace
