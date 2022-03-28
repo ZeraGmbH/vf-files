@@ -29,22 +29,27 @@ void SerialDeviceWatcher::onTimer()
     ttySysClassDir.setNameFilters(QStringList("ttyUSB*"));
     const QFileInfoList fileInfos = ttySysClassDir.entryInfoList();
     if(fileInfos != m_LastUSBSerialDevsFound) {
-        QJsonObject json;
         m_LastUSBSerialDevsFound = fileInfos;
-        QList<QSerialPortInfo> portInfos = QSerialPortInfo::availablePorts();
-        for(auto portInfo : portInfos) {
-            QString portName = portInfo.portName();
-            if(portName.contains("ttyUSB")) {
-                QJsonObject jsonEntry;
-                jsonEntry.insert("description", portInfo.description());
-                jsonEntry.insert("manufacturer", portInfo.manufacturer());
-                jsonEntry.insert("serial", portInfo.serialNumber());
-                QString systemLocation = portInfo.systemLocation();
-                json.insert(systemLocation, jsonEntry);
-            }
-        }
-        m_veinComponent->setValue(json);
+        updateUsbSerialDevicesDetails();
     }
+}
+
+void SerialDeviceWatcher::updateUsbSerialDevicesDetails()
+{
+    QJsonObject json;
+    QList<QSerialPortInfo> portInfos = QSerialPortInfo::availablePorts();
+    for(auto portInfo : portInfos) {
+        QString portName = portInfo.portName();
+        if(portName.contains("ttyUSB")) {
+            QJsonObject jsonEntry;
+            jsonEntry.insert("description", portInfo.description());
+            jsonEntry.insert("manufacturer", portInfo.manufacturer());
+            jsonEntry.insert("serial", portInfo.serialNumber());
+            QString systemLocation = portInfo.systemLocation();
+            json.insert(systemLocation, jsonEntry);
+        }
+    }
+    m_veinComponent->setValue(json);
 }
 
 }// namespace
