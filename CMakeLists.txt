@@ -73,7 +73,7 @@ install(FILES
 # announce headers - target perspective
 target_include_directories(VfFiles
     PUBLIC
-    $<INSTALL_INTERFACE:include/VfFiles>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/VfFiles>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
