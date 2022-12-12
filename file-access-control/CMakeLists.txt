@@ -1,3 +1,6 @@
+set(SET_TEST_DATA_PATH  "${PROJECT_SOURCE_DIR}/file-access-control/tests/test-data")
+add_definitions(-DTEST_DATA_PATH="${SET_TEST_DATA_PATH}")
+
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/file-access-control/src/fileaccesscontrol.cpp
     )
