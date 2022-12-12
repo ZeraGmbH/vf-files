@@ -7,6 +7,11 @@ static const QString accessNotAllowedFile = QStringLiteral(TEST_DATA_PATH) + QSt
 static const QString nonExistingFile = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/foo.txt");
 
 static const QString accessAllowedFolder =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/");
+static const QString accessAllowedSubFolder = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/subfolder");
+static const QString accessDeniedSubFolder = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/subfolder");
+static const QString nonExistingFolder =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/foo/");
+static const QString nastyTestFolderWithNoAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/../denied-folder");
+static const QString nastyTestFolderWithAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/../allowed-folder");
 
 TEST(FILE_ACCESS, FILE_WITH_ACCESS_ALLOWED)
 {
@@ -27,4 +32,45 @@ TEST(FILE_ACCESS, NON_EXISTING_FILE)
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_FALSE(testAccess.isFileAccessAllowed(nonExistingFile));
+}
+
+TEST(FILE_ACCESS, EMPTY_ALLOWED_LISTS)
+{
+    FileAccessControl testAccess;
+    EXPECT_FALSE(testAccess.isFileAccessAllowed(accessAllowedFile));
+}
+
+TEST (FOLDER_ACCESS, ALLOWED_SUBFOLDER )
+{
+    FileAccessControl testAccess;
+    testAccess.addDirToAllowedDirList(accessAllowedFolder);
+    EXPECT_TRUE(testAccess.isFolderAccessAllowed(accessAllowedSubFolder));
+}
+
+TEST (FOLDER_ACCESS, NOT_ALLOWED_SUBFOLDER )
+{
+    FileAccessControl testAccess;
+    testAccess.addDirToAllowedDirList(accessAllowedFolder);
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(accessDeniedSubFolder));
+}
+
+TEST(FOLDER_ACCESS, NON_EXISTING_FOLDER)
+{
+    FileAccessControl testAccess;
+    testAccess.addDirToAllowedDirList(accessAllowedFolder);
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(nonExistingFolder));
+}
+
+TEST (FOLDER_ACCESS, NASTY_TEST_FOLDER_WITH_ACCESS )
+{
+    FileAccessControl testAccess;
+    testAccess.addDirToAllowedDirList(accessAllowedFolder);
+    EXPECT_TRUE(testAccess.isFolderAccessAllowed(nastyTestFolderWithAccess));
+}
+
+TEST (FOLDER_ACCESS, NASTY_TEST_FOLDER_WITH_NO_ACCESS )
+{
+    FileAccessControl testAccess;
+    testAccess.addDirToAllowedDirList(accessAllowedFolder);
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(nastyTestFolderWithNoAccess));
 }
