@@ -9,7 +9,7 @@ class FileAccessControl
 public:
     FileAccessControl();
 
-    bool isAccessAllowed(QString fileName);
+    bool isFileAccessAllowed(QString fileName);
     void addDirToAllowedDirList(QDir dirName);
 private:
     QVector<QDir> m_allowedDirs;
