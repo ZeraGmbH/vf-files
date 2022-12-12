@@ -29,6 +29,8 @@ find_package(VfComponent REQUIRED)
 find_package(VfStorageHash REQUIRED)
 find_package(VfCpp REQUIRED)
 
+add_subdirectory(file-access-control)
+
 # create library
 add_library(VfFiles SHARED
     ${PROJECT_SOURCE_DIR}/src/vf_files.h
