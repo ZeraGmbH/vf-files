@@ -12,7 +12,7 @@ static const QString nonExistingFileNotAllowedSubfolder = QStringLiteral(TEST_DA
 
 static const QString accessAllowedFolder =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/");
 static const QString accessAllowedSubFolder = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/subfolder");
-static const QString accessDeniedSubFolder = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/subfolder");
+static const QString accessNotAllowedSubFolder = QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/subfolder");
 static const QString nonExistingFolder =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/foo/");
 static const QString nastyTestFolderWithNoAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/../denied-folder");
 static const QString nastyTestFolderWithAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/../allowed-folder");
@@ -83,7 +83,7 @@ TEST (FOLDER_ACCESS, ACCESS_NOT_ALLOWED_SUBFOLDER )
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
-    EXPECT_FALSE(testAccess.isFolderAccessAllowed(accessDeniedSubFolder));
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(accessNotAllowedSubFolder));
 }
 
 TEST(FOLDER_ACCESS, NON_EXISTING_FOLDER)
@@ -91,6 +91,12 @@ TEST(FOLDER_ACCESS, NON_EXISTING_FOLDER)
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_FALSE(testAccess.isFolderAccessAllowed(nonExistingFolder));
+}
+
+TEST(FOLDER_ACCESS, EMPTY_ACCESS_ALLOWED_LIST)
+{
+    FileAccessControl testAccess;
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(accessAllowedFolder));
 }
 
 TEST (FOLDER_ACCESS, NASTY_TEST_FOLDER_WITH_ACCESS )
