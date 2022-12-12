@@ -6,12 +6,16 @@ FileAccessControl::FileAccessControl()
 
 }
 
-bool FileAccessControl::isAccessAllowed(QString fileName)
+bool FileAccessControl::isFileAccessAllowed(QString fileName)
 {
     QFileInfo fileInfo(fileName);
-    QString absoluteFilePath(fileInfo.absolutePath());
 
-    return m_allowedDirs.contains(absoluteFilePath);
+    if (fileInfo.exists()) {
+        return m_allowedDirs.contains(fileInfo.absolutePath());
+    }
+    else {
+        return false;
+    }
 }
 
 void FileAccessControl::addDirToAllowedDirList(QDir dirName)
