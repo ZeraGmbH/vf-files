@@ -29,6 +29,7 @@ find_package(VfComponent REQUIRED)
 find_package(VfStorageHash REQUIRED)
 find_package(VfCpp REQUIRED)
 
+enable_testing()
 add_subdirectory(file-access-control)
 
 # create library
@@ -119,8 +120,6 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
     )
-
-enable_testing()
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
