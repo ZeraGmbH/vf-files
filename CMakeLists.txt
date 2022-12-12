@@ -55,6 +55,7 @@ target_link_libraries(VfFiles
     VeinMeta::VfComponent
     VeinMeta::VfStorageHash
     VeinMeta::VfCpp
+    file-access-control-lib
     )
 
 # set target Version

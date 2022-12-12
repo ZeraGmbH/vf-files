@@ -37,6 +37,12 @@ install(TARGETS file-access-control-lib
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
+# install targets cmake-files
+install(EXPORT file-access-control-libExport
+    FILE file-access-control-libTargets.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/file-access-control-lib
+    )
+
 # install public headers
 install(
     FILES ${HEADERS}
