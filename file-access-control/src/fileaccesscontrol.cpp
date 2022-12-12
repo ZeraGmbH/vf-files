@@ -11,7 +11,7 @@ bool FileAccessControl::isFileAccessAllowed(QString fileName)
     QFileInfo fileInfo(fileName);
 
     if (fileInfo.exists()) {
-        return m_allowedDirs.contains(fileInfo.absolutePath());
+        return isFolderAccessAllowed(fileInfo.absolutePath());
     }
     else {
         return false;
