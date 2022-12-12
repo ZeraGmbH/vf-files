@@ -17,14 +17,14 @@ static const QString nonExistingFolder =  QStringLiteral(TEST_DATA_PATH) + QStri
 static const QString nastyTestFolderWithNoAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/allowed-folder/../denied-folder");
 static const QString nastyTestFolderWithAccess =  QStringLiteral(TEST_DATA_PATH) + QStringLiteral("/denied-folder/../allowed-folder");
 
-TEST(FILE_ACCESS, FILE_WITH_ACCESS_ALLOWED)
+TEST(FILE_ACCESS, FILE_FROM_ACCESS_ALLOWED_FOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_TRUE(testAccess.isFileAccessAllowed(accessAllowedFile));
 }
 
-TEST(FILE_ACCESS, FILE_WITH_ACCESS_NOT_ALLOWED)
+TEST(FILE_ACCESS, FILE_FROM_ACCESS_NOT_ALLOWED_FOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
@@ -38,48 +38,48 @@ TEST(FILE_ACCESS, NON_EXISTING_FILE)
     EXPECT_FALSE(testAccess.isFileAccessAllowed(nonExistingFile));
 }
 
-TEST(FILE_ACCESS, EMPTY_ALLOWED_LISTS)
+TEST(FILE_ACCESS, EMPTY_ACCESS_ALLOWED_LIST)
 {
     FileAccessControl testAccess;
     EXPECT_FALSE(testAccess.isFileAccessAllowed(accessAllowedFile));
 }
 
-TEST (FILE_ACCESS, FILE_WITH_ACCESS_ALLOWED_SUBFOLDER)
+TEST (FILE_ACCESS, FILE_FROM_ACCESS_ALLOWED_SUBFOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_TRUE(testAccess.isFileAccessAllowed(accessAllowedSubfolderFile));
 }
 
-TEST (FILE_ACCESS, FILE_WITH_ACCESS_NOT_ALLOWED_SUBFOLDER)
+TEST (FILE_ACCESS, FILE_FROM_ACCESS_NOT_ALLOWED_SUBFOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_FALSE(testAccess.isFileAccessAllowed(accessNotAllowedSubfolderFile));
 }
 
-TEST (FILE_ACCESS, NON_EXISTING_FILE_ALLOWED_SUBFOLDER)
+TEST (FILE_ACCESS, NON_EXISTING_FILE_FROM_ACCESS_ALLOWED_SUBFOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_FALSE(testAccess.isFileAccessAllowed(nonExistingFileAllowedSubfolder));
 }
 
-TEST (FILE_ACCESS, NON_EXISTING_FILE_NOT_ALLOWED_SUBFOLDER)
+TEST (FILE_ACCESS, NON_EXISTING_FILE_FROM_ACCESS_NOT_ALLOWED_SUBFOLDER)
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_FALSE(testAccess.isFileAccessAllowed(nonExistingFileNotAllowedSubfolder));
 }
 
-TEST (FOLDER_ACCESS, ALLOWED_SUBFOLDER )
+TEST (FOLDER_ACCESS, ACCESS_ALLOWED_SUBFOLDER )
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
     EXPECT_TRUE(testAccess.isFolderAccessAllowed(accessAllowedSubFolder));
 }
 
-TEST (FOLDER_ACCESS, NOT_ALLOWED_SUBFOLDER )
+TEST (FOLDER_ACCESS, ACCESS_NOT_ALLOWED_SUBFOLDER )
 {
     FileAccessControl testAccess;
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
