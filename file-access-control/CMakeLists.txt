@@ -42,3 +42,5 @@ install(
     FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/file-access-control-lib
     )
+
+add_subdirectory(tests)
