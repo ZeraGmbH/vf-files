@@ -7,6 +7,7 @@
 class FileAccessControl
 {
 public:
+    FileAccessControl();
     FileAccessControl(QVector<QDir> &allowdList);
 
     bool isFileAccessAllowed(QString fileName);

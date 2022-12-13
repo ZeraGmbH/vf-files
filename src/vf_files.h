@@ -4,6 +4,7 @@
 #include <vf-cpp-entity.h>
 #include <QObject>
 #include <QDir>
+#include <fileaccesscontrol.h>
 
 // TODO: PIMPL!!!
 
@@ -187,6 +188,8 @@ public slots:
      * @return QStringList list file information. Entries are prefixed by "p_fileName:" / "fullname:" / "filename:" / "size:"
      */
     QVariant RPC_GetFileInfo(QVariantMap p_params);
+public:
+    FileAccessControl m_fac;
 
 private:
     // TODO PIMPL
@@ -196,7 +199,6 @@ private:
                     const bool returMatchingDirsOnly,
                     QStringList &resultList,
                     QString &strError);
-
 
     VfCpp::veinmoduleentity *m_entity;
     QLocale::DataSizeFormats m_dataSizeflags;

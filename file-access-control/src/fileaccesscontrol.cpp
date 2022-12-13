@@ -1,6 +1,11 @@
 #include <QFileInfo>
 #include "fileaccesscontrol.h"
 
+FileAccessControl::FileAccessControl()
+{
+
+}
+
 FileAccessControl::FileAccessControl(QVector<QDir> &allowdList) :
     m_allowedDirs(allowdList)
 {
