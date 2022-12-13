@@ -29,6 +29,7 @@ find_package(VfComponent REQUIRED)
 find_package(VfStorageHash REQUIRED)
 find_package(VfCpp REQUIRED)
 
+# add subdirectory
 enable_testing()
 add_subdirectory(file-access-control)
 
