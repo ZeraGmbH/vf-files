@@ -29,9 +29,7 @@ find_package(VfComponent REQUIRED)
 find_package(VfStorageHash REQUIRED)
 find_package(VfCpp REQUIRED)
 
-# add subdirectory
 enable_testing()
-add_subdirectory(file-access-control)
 
 # create library
 add_library(VfFiles SHARED
@@ -45,6 +43,8 @@ add_library(VfFiles SHARED
     ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.cpp
     ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.h
     ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.cpp
+    ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.cpp
+    ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.h
 )
 
 # link dependencies
@@ -57,7 +57,6 @@ target_link_libraries(VfFiles
     VeinMeta::VfComponent
     VeinMeta::VfStorageHash
     VeinMeta::VfCpp
-    file-access-control-lib
     )
 
 # set target Version
