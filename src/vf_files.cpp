@@ -17,6 +17,11 @@ vf_files::vf_files(QObject *parent, int id) : QObject(parent),
     setFindLimits();
 }
 
+vf_files::vf_files(FileAccessControlPtr fileAccessController) : vf_files()
+{
+    m_fileAccessController = fileAccessController;
+}
+
 bool vf_files::initOnce()
 {
     // create our entity / rpcs once
@@ -321,7 +326,10 @@ QVariant vf_files::RPC_DeleteFile(QVariantMap p_params)
         }
     }
     if(strError.isEmpty()) {
-        if(!file.remove()) {
+        if(!m_fileAccessController->isFileAccessAllowed(fileName)) {
+            appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Access denied %1").arg(fileName));
+        }
+        else if(!file.remove()) {
             appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Could not delete file %1").arg(fileName));
         }
     }
