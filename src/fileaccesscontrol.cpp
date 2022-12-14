@@ -6,10 +6,11 @@ FileAccessControl::FileAccessControl()
 
 }
 
-FileAccessControl::FileAccessControl(QVector<QDir> &allowdList) :
-    m_allowedDirs(allowdList)
+FileAccessControl::FileAccessControl(QStringList &allowdList)
 {
-
+    for(const auto &str: allowdList) {
+        m_allowedDirs.append(str);
+    }
 }
 
 bool FileAccessControl::isFileAccessAllowed(QString fileName)
@@ -39,7 +40,7 @@ bool FileAccessControl::isFolderAccessAllowed(QString folderName)
     return accessAllowed;
 }
 
-void FileAccessControl::addDirToAllowedDirList(QDir dirName)
+void FileAccessControl::addDirToAllowedDirList(QString dirName)
 {
     m_allowedDirs.append(dirName);
 }
