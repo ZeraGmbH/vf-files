@@ -31,20 +31,28 @@ find_package(VfCpp REQUIRED)
 
 enable_testing()
 
-# create library
-add_library(VfFiles SHARED
-    ${PROJECT_SOURCE_DIR}/src/vf_files.h
+set(SOURCES
     ${PROJECT_SOURCE_DIR}/src/vf_files.cpp
-    ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.h
     ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/defaultpathentry.h
     ${PROJECT_SOURCE_DIR}/src/defaultpathentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.h
     ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.h
     ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.cpp
     ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.cpp
+    )
+
+set(HEADERS
+    ${PROJECT_SOURCE_DIR}/src/vf_files.h
+    ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.h
+    ${PROJECT_SOURCE_DIR}/src/defaultpathentry.h
+    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.h
+    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.h
     ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.h
+    )
+
+# create library
+add_library(VfFiles SHARED
+    ${SOURCES}
+    ${HEADERS}
 )
 
 # link dependencies
@@ -70,7 +78,6 @@ generate_export_header(VfFiles)
 # install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/vffiles_export.h
-    ${PROJECT_SOURCE_DIR}/src/vf_files.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
     )
 
@@ -117,7 +124,7 @@ install(EXPORT VfFilesExport
 
 # install public headers
 install(
-    FILES ${HEADER}
+    FILES ${HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
     )
 
