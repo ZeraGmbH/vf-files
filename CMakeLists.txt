@@ -121,6 +121,8 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
     )
 
+add_subdirectory(tests)
+
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
