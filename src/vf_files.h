@@ -43,7 +43,6 @@ public:
      * @param id: the vein entity id
      */
     explicit vf_files(QObject *parent = nullptr, int id=4);
-    explicit vf_files(FileAccessControlPtr fileAccessController);
 
     /**
      * @brief initOnce
@@ -207,7 +206,6 @@ private:
     int m_findMaxHitsDirs;
     int m_findMaxHitsFiles;
     bool m_isInitalized;
-    FileAccessControlPtr m_fileAccessController;
 };
 
 }
