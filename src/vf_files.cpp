@@ -141,14 +141,8 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
     if(sourceDirPath.isEmpty()) {
         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_sourceDir is empty "));
     }
-    else if (!m_fileAccessController->isFolderAccessAllowed(sourceDirPath)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceDirPath + QStringLiteral(" access denied"));
-    }
     if(destDirPath.isEmpty()) {
         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_destDir is empty "));
-    }
-    else if (!m_fileAccessController->isFolderAccessAllowed(destDirPath)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + destDirPath + QStringLiteral(" access denied"));
     }
     // Ensure trailing dir separator
     if(!sourceDirPath.endsWith(QDir::separator())) {
