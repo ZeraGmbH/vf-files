@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QVector>
+#include <memory>
 
 class FileAccessControl
 {
@@ -16,5 +17,7 @@ public:
 private:
     QVector<QDir> m_allowedDirs;
 };
+
+typedef std::shared_ptr<FileAccessControl> FileAccessControlPtr;
 
 #endif // FILEACCESSCONTROL_H
