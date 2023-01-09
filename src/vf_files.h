@@ -206,7 +206,6 @@ private:
     int m_findMaxHitsDirs;
     int m_findMaxHitsFiles;
     bool m_isInitalized;
-    FileAccessControlPtr m_fileAccessController;
 };
 
 }
