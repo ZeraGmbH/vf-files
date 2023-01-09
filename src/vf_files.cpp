@@ -9,17 +9,13 @@
 
 using namespace vfFiles;
 
-vf_files::vf_files(QObject *parent, int id) : QObject(parent),
+vf_files::vf_files(QObject *parent, int id, FileAccessControlPtr fileAccessController) : QObject(parent),
     m_entity(new VfCpp::veinmoduleentity(id)),
     m_dataSizeflags(QLocale::DataSizeSIFormat),
-    m_isInitalized(false)
+    m_isInitalized(false),
+    m_fileAccessController(fileAccessController)
 {
     setFindLimits();
-}
-
-vf_files::vf_files(FileAccessControlPtr fileAccessController) : vf_files()
-{
-    m_fileAccessController = fileAccessController;
 }
 
 bool vf_files::initOnce()
