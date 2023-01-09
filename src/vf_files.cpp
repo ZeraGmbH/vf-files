@@ -81,20 +81,10 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
 
     // check some obvious plausis first
     if(!bSourceExists) {
-         appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" does not exist"));
-     }
-    else if (!m_fileAccessController->isFileAccessAllowed(sourceFile)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" access denied"));
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" does not exist"));
     }
-
-     if(!p_overwrite && bDestExists) {
-         appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: Cannot overwrite ") + destFile);
-     }
-    else {
-        QString folderName = destFile.left(destFile.lastIndexOf(QDir::separator()));
-         if (!m_fileAccessController->isFolderAccessAllowed(folderName)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + folderName + QStringLiteral(" access denied"));
-         }
+    if(!p_overwrite && bDestExists) {
+        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: Cannot overwrite ") + destFile);
     }
 
     // ensure dest directory is there
@@ -137,14 +127,8 @@ QVariant vf_files::RPC_CopyDirFiles(QVariantMap p_params)
     if(sourceDirPath.isEmpty()) {
         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_sourceDir is empty "));
     }
-    else if (!m_fileAccessController->isFolderAccessAllowed(sourceDirPath)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceDirPath + QStringLiteral(" access denied"));
-    }
     if(destDirPath.isEmpty()) {
         appendErrorMsg(strError, QStringLiteral("RPC_CopyDirFiles: p_destDir is empty "));
-    }
-    else if (!m_fileAccessController->isFolderAccessAllowed(destDirPath)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + destDirPath + QStringLiteral(" access denied"));
     }
     // Ensure trailing dir separator
     if(!sourceDirPath.endsWith(QDir::separator())) {
@@ -338,10 +322,7 @@ QVariant vf_files::RPC_DeleteFile(QVariantMap p_params)
         }
     }
     if(strError.isEmpty()) {
-        if(!m_fileAccessController->isFileAccessAllowed(fileName)) {
-            appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Access denied %1").arg(fileName));
-        }
-        else if(!file.remove()) {
+        if(!file.remove()) {
             appendErrorMsg(strError, QStringLiteral("RPC_DeleteFile: Could not delete file %1").arg(fileName));
         }
     }
