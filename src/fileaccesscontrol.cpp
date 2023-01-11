@@ -17,12 +17,7 @@ bool FileAccessControl::isFileAccessAllowed(QString fileName)
 {
     QFileInfo fileInfo(fileName);
 
-    if (fileInfo.exists()) {
-        return isFolderAccessAllowed(fileInfo.absolutePath());
-    }
-    else {
-        return false;
-    }
+    return isFolderAccessAllowed(fileInfo.absolutePath());
 }
 
 bool FileAccessControl::isFolderAccessAllowed(QString folderName)
@@ -30,11 +25,9 @@ bool FileAccessControl::isFolderAccessAllowed(QString folderName)
     QDir dir(folderName);
     bool accessAllowed = false;
 
-    if (dir.exists()) {
+    accessAllowed = m_allowedDirs.contains(dir);
+    while (!accessAllowed && dir.cdUp()) {
         accessAllowed = m_allowedDirs.contains(dir);
-        while (!accessAllowed && dir.cdUp()) {
-            accessAllowed = m_allowedDirs.contains(dir);
-        }
     }
 
     return accessAllowed;
