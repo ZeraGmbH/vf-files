@@ -22,12 +22,15 @@ bool FileAccessControl::isFileAccessAllowed(QString fileName)
 
 bool FileAccessControl::isFolderAccessAllowed(QString folderName)
 {
-    QDir dir(folderName);
     bool accessAllowed = false;
+    QString folderPath = folderName;
 
-    accessAllowed = m_allowedDirs.contains(dir);
-    while (!accessAllowed && dir.cdUp()) {
-        accessAllowed = m_allowedDirs.contains(dir);
+    //deny access to all folder paths which contain '..'
+    if (!folderPath.contains("..")) {
+        while (!accessAllowed && !folderPath.isEmpty()) {
+            accessAllowed = m_allowedDirs.contains(folderPath);
+            folderPath = folderPath.left(folderPath.lastIndexOf(QDir::separator()));
+        }
     }
 
     return accessAllowed;

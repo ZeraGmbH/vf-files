@@ -131,7 +131,7 @@ TEST (FOLDER_ACCESS, NASTY_TEST_FOLDER_WITH_ACCESS )
     QStringList allowedFolders;
     FileAccessControl testAccess(allowedFolders);
     testAccess.addDirToAllowedDirList(accessAllowedFolder);
-    EXPECT_TRUE(testAccess.isFolderAccessAllowed(nastyTestFolderWithAccess));
+    EXPECT_FALSE(testAccess.isFolderAccessAllowed(nastyTestFolderWithAccess));
 }
 
 TEST (FOLDER_ACCESS, NASTY_TEST_FOLDER_WITH_NO_ACCESS )
