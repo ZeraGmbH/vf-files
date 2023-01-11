@@ -79,23 +79,22 @@ QVariant vf_files::RPC_CopyFile(QVariantMap p_params)
     bool bSourceExists = QFile::exists(sourceFile);
     bool bDestExists = QFile::exists(destFile);
 
+    if (!m_fileAccessController->isFileAccessAllowed(sourceFile)) {
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" access denied"));
+    }
+
+    if (!m_fileAccessController->isFileAccessAllowed(destFile)) {
+            appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + destFile + QStringLiteral(" access denied"));
+    }
+
     // check some obvious plausis first
     if(!bSourceExists) {
          appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" does not exist"));
      }
-    else if (!m_fileAccessController->isFileAccessAllowed(sourceFile)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + sourceFile + QStringLiteral(" access denied"));
-    }
 
      if(!p_overwrite && bDestExists) {
          appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: Cannot overwrite ") + destFile);
      }
-    else {
-        QString folderName = destFile.left(destFile.lastIndexOf(QDir::separator()));
-         if (!m_fileAccessController->isFolderAccessAllowed(folderName)) {
-        appendErrorMsg(strError, QStringLiteral("RPC_CopyFile: ") + folderName + QStringLiteral(" access denied"));
-         }
-    }
 
     // ensure dest directory is there
     if(strError.isEmpty()) {
