@@ -47,7 +47,7 @@ void MountWatcherWorker::readProcFile(QFile &procFile)
 {
     QByteArray procfileContent = procFile.readAll();
     QStringList newList;
-    QRegularExpression regEx(QStringLiteral(" ") + m_mountBasePath + QStringLiteral("[0-9A-Za-z\\/\\\\]*"));
+    QRegularExpression regEx(QStringLiteral(" ") + m_mountBasePath + QStringLiteral("[-_0-9A-Za-z\\/\\\\]*"));
     QRegularExpressionMatchIterator matchIter = regEx.globalMatch(procfileContent);
     while (matchIter.hasNext()) {
         QRegularExpressionMatch match = matchIter.next();
