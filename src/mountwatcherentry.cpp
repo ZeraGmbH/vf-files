@@ -47,7 +47,11 @@ void MountWatcherWorker::readProcFile(QFile &procFile)
 {
     QByteArray procfileContent = procFile.readAll();
     QStringList newList;
-    QRegularExpression regEx(QStringLiteral(" ") + m_mountBasePath + QStringLiteral("[-_0-9A-Za-z\\/\\\\]*"));
+    // https://verwaltung.uni-koeln.de/stabsstelle01/content/benutzerberatung/it_faq/windows/faqitems163122/index_ger.html
+    // https://doc.qt.io/qt-6/qregularexpression.html
+    // Alternatively, you can use a raw string literal, in which case you don't need to escape backslashes in the pattern,
+    // all characters between R"(...)" are considered raw characters.
+    QRegularExpression regEx(QStringLiteral(" ") + m_mountBasePath + QStringLiteral(R"([-_0-9A-Za-z\/\\]*)"));
     QRegularExpressionMatchIterator matchIter = regEx.globalMatch(procfileContent);
     while (matchIter.hasNext()) {
         QRegularExpressionMatch match = matchIter.next();
