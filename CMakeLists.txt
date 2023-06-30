@@ -17,7 +17,6 @@ include(CMakePackageConfigHelpers)
 
 find_package(Qt5 REQUIRED COMPONENTS Core SerialPort CONFIG)
 find_package(VeinFramework REQUIRED)
-find_package(VfCpp REQUIRED)
 
 enable_testing()
 
@@ -52,7 +51,7 @@ target_link_libraries(VfFiles
     Zera::VfEvent
     Zera::VfComponent
     Zera::VfStorageHash
-    VeinMeta::VfCpp
+    Zera::VfCpp
     )
 
 set_target_properties(VfFiles PROPERTIES VERSION ${PROJECT_VERSION})
