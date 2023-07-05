@@ -6,7 +6,7 @@ DirWatcherEntry::DirWatcherEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool DirWatcherEntry::create(VfCpp::veinmoduleentity *entity,
+bool DirWatcherEntry::create(VfCpp::VfCppEntity *entity,
                              const QString componentName,
                              const QString path,
                              const QStringList nameFilters,

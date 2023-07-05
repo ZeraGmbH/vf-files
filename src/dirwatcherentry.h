@@ -14,7 +14,7 @@ class DirWatcherEntry : public QObject
     Q_OBJECT
 public:
     explicit DirWatcherEntry(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VfCppEntity* entity,
                 const QString componentName,
                 const QString path,
                 const QStringList nameFilters,
