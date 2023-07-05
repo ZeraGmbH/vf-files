@@ -12,7 +12,7 @@ class MountWatcherEntry : public QObject
     Q_OBJECT
 public:
     explicit MountWatcherEntry(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VfCppEntity* entity,
                 const QString componentName,
                 const QString procFileMount,
                 const QString mountBasePath);

@@ -10,21 +10,21 @@
 
 namespace vfFiles {
 
-using VfCpp::cVeinModuleComponent;
+using VfCpp::VfCppComponent;
 
 class SerialDeviceWatcher : public QObject
 {
     Q_OBJECT
 public:
     explicit SerialDeviceWatcher(QObject *parent = nullptr);
-    bool create(VfCpp::veinmoduleentity* entity,
+    bool create(VfCpp::VfCppEntity* entity,
                 const QString componentName);
 
 private:
     void onTimer();
     void updateUsbSerialDevicesDetails();
 
-    cVeinModuleComponent::Ptr m_veinComponent = nullptr;
+    VfCppComponent::Ptr m_veinComponent = nullptr;
     QTimer m_periodicPollTimer;
     QFileInfoList m_LastUSBSerialDevsFound;
     bool m_usbChangeDetected = false;

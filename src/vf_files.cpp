@@ -10,7 +10,7 @@
 using namespace vfFiles;
 
 vf_files::vf_files(FileAccessControlPtr fileAccessController, QObject *parent, int id) : QObject(parent),
-    m_entity(new VfCpp::veinmoduleentity(id)),
+    m_entity(new VfCpp::VfCppEntity(id)),
     m_dataSizeflags(QLocale::DataSizeSIFormat),
     m_isInitalized(false),
     m_fileAccessController(fileAccessController)
@@ -539,7 +539,7 @@ void vf_files::setDataSizeFormat(QLocale::DataSizeFormats dataSizeflags)
     m_dataSizeflags = dataSizeflags;
 }
 
-VfCpp::veinmoduleentity *vf_files::getVeinEntity() const
+VfCpp::VfCppEntity *vf_files::getVeinEntity() const
 {
     return m_entity;
 }

@@ -8,7 +8,7 @@ SerialDeviceWatcher::SerialDeviceWatcher(QObject *parent) : QObject(parent)
 {
 }
 
-bool SerialDeviceWatcher::create(VfCpp::veinmoduleentity *entity, const QString componentName)
+bool SerialDeviceWatcher::create(VfCpp::VfCppEntity *entity, const QString componentName)
 {
     bool created = false;
     if(!m_veinComponent) {

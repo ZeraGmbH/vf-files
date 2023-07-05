@@ -64,7 +64,7 @@ MountWatcherEntry::MountWatcherEntry(QObject *parent) : QObject(parent)
 {
 }
 
-bool MountWatcherEntry::create(VfCpp::veinmoduleentity *entity,
+bool MountWatcherEntry::create(VfCpp::VfCppEntity *entity,
                                const QString componentName,
                                const QString procFileMount,
                                const QString mountBasePath)
