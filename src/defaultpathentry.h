@@ -14,10 +14,6 @@ public:
                 const QString componentName,
                 const QString path,
                 const bool create);
-
-private:
-    VfCpp::VeinCompProxy<QStringList> m_veinComponent;
-
 };
 
 #endif // DEFAULTPATHENTRY_H

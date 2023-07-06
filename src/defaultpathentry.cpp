@@ -20,7 +20,7 @@ bool DefaultPathEntry::create(VfCpp::VfCppEntity *entity, const QString componen
         if(!setPath.endsWith(QDir::separator())) {
             setPath.append(QDir::separator());
         }
-        m_veinComponent = entity->createComponent(componentName, setPath, true);
+        entity->createComponent(componentName, setPath, true);
     }
     return ok;
 }
