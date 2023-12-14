@@ -1,2 +1,1 @@
 SUBSYSTEMS=="usb", SUBSYSTEM=="block", ENV{ID_FS_USAGE}=="filesystem", SYMLINK+="mstck%n"
-
