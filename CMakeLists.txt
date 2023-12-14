@@ -5,10 +5,10 @@ project(vf-files LANGUAGES CXX)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(VfFiles_VERSION_MAJOR "0")
-set(VfFiles_VERSION_MINOR "0")
-set(VfFiles_VERSION_PATCH "1")
-set(PROJECT_VERSION "${VfFiles_VERSION_MAJOR}.${VfFiles_VERSION_MINOR}.${VfFiles_VERSION_PATCH}")
+set(PROJECT_VERSION_MAJOR "1")
+set(PROJECT_VERSION_MINOR "0")
+set(PROJECT_VERSION_PATCH "0")
+set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
 include(FeatureSummary)
 include(GNUInstallDirs)
@@ -20,63 +20,9 @@ find_package(VeinFramework REQUIRED)
 
 enable_testing()
 
-set(SOURCES
-    ${PROJECT_SOURCE_DIR}/src/vf_files.cpp
-    ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/defaultpathentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.cpp
-    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.cpp
-    ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.cpp
-    )
-
-set(HEADERS
-    ${PROJECT_SOURCE_DIR}/src/vf_files.h
-    ${PROJECT_SOURCE_DIR}/src/dirwatcherentry.h
-    ${PROJECT_SOURCE_DIR}/src/defaultpathentry.h
-    ${PROJECT_SOURCE_DIR}/src/mountwatcherentry.h
-    ${PROJECT_SOURCE_DIR}/src/serialdevicewatcher.h
-    ${PROJECT_SOURCE_DIR}/src/fileaccesscontrol.h
-    )
-
-add_library(VfFiles SHARED
-    ${SOURCES}
-    ${HEADERS}
-)
-
-target_link_libraries(VfFiles 
-    PUBLIC
-    Qt5::Core
-    Qt5::SerialPort
-    Zera::VfEvent
-    Zera::VfComponent
-    Zera::VfStorageHash
-    Zera::VfCpp
-    )
-
-set_target_properties(VfFiles PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(VfFiles PROPERTIES SOVERSION ${VfFiles_VERSION_MAJOR})
-
-generate_export_header(VfFiles)
-install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/vffiles_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
-    )
-
-target_include_directories(VfFiles
-    PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/VfFiles>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    )
-
-install(TARGETS VfFiles
-    EXPORT VfFilesExport
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
 write_basic_package_version_file(
     VfFilesConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
+    VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMajorVersion
     )
 
@@ -92,11 +38,6 @@ install(EXPORT VfFilesExport
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VfFiles
     )
 
-install(
-    FILES ${HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/VfFiles
-    )
-
-add_subdirectory(tests)
+add_subdirectory(vein-component)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
