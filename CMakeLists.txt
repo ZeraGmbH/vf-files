@@ -39,5 +39,6 @@ install(EXPORT VfFilesExport
     )
 
 add_subdirectory(vein-component)
+add_subdirectory(automount)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
