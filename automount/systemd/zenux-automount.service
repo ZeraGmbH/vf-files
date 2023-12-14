@@ -3,7 +3,7 @@ Description=Zenux automount service
 After=local-fs.target
 
 [Service]
-ExecStart=/usr/bin/zera-automount
+ExecStart=/usr/bin/zenux-automount
 Type=simple
 
 [Install]
