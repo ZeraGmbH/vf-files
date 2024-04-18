@@ -26,13 +26,13 @@ bool MountWatcherEntryBase::create(const QString procFileMount, const QString mo
     bool ok = strErrorMsg.isEmpty();
     if(ok) {
         // prepare polling thread
-        QThread *thread = new QThread(this);
+        QThread *thread = new QThread();
         MountWatcherWorker *worker = new MountWatcherWorker(procFileMount, mountBasePath);
         worker->moveToThread(thread);
 
         // thread start(/stop)
         QObject::connect(thread, &QThread::started, worker, &MountWatcherWorker::startPoll, Qt::QueuedConnection);
-        QObject::connect(thread, &QThread::finished, worker, &MountWatcherWorker::deleteLater); // very unlikely & thread context
+        QObject::connect(thread, &QThread::finished, worker, &MountWatcherWorker::deleteLater);
 
         // mount changes
         QObject::connect(worker, &MountWatcherWorker::mountChanged, this, &MountWatcherEntryBase::sigMountsChanged, Qt::QueuedConnection);
