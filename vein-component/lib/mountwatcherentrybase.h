@@ -1,6 +1,7 @@
 #ifndef MOUNTWATCHERENTRYBASE_H
 #define MOUNTWATCHERENTRYBASE_H
 
+#include "mountwatcherthread.h"
 #include <QObject>
 #include <QThread>
 
@@ -19,7 +20,7 @@ signals:
 
 private:
     bool m_created = false;
-    QThread m_thread;
+    MountWatcherThread m_thread;
 };
 
 }
