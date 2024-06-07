@@ -1,18 +1,24 @@
-#include "mountwatcherworker.h"
+#include "mountwatcherthread.h"
+#include "mountwatcherentrybase.h"
 #include <QRegularExpression>
 #include <poll.h>
 #include <unistd.h>
 
 namespace vfFiles {
 
-MountWatcherWorker::MountWatcherWorker(const QString procFileMount, const QString &mountBasePath, QObject *parent) :
-    QObject(parent),
-    m_procFileMount(procFileMount),
-    m_mountBasePath(!mountBasePath.endsWith(QStringLiteral("/")) ? mountBasePath+QStringLiteral("/") : mountBasePath)
+MountWatcherThread::MountWatcherThread(MountWatcherEntryBase *watcher) :
+    m_watcher(watcher)
 {
 }
 
-void MountWatcherWorker::startPoll()
+void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
+{
+    m_procFileMount = procFileMount;
+    m_mountBasePath = !mountBasePath.endsWith(QStringLiteral("/")) ? mountBasePath+QStringLiteral("/") : mountBasePath;
+    start();
+}
+
+void MountWatcherThread::run()
 {
     struct pollfd ev;
     int ret;
@@ -39,7 +45,7 @@ void MountWatcherWorker::startPoll()
     }
 }
 
-void MountWatcherWorker::readProcFile(QFile &procFile)
+void MountWatcherThread::readProcFile(QFile &procFile)
 {
     QByteArray procfileContent = procFile.readAll();
     QStringList newList;
@@ -53,7 +59,13 @@ void MountWatcherWorker::readProcFile(QFile &procFile)
         QRegularExpressionMatch match = matchIter.next();
         newList.append(match.captured().replace(QStringLiteral(" "), QString()));
     }
-    emit mountChanged(newList);
+    if(m_currentMounts != newList) {
+        m_currentMounts = newList;
+        QMetaObject::invokeMethod(m_watcher,
+                                  "sigMountsChanged",
+                                  Qt::QueuedConnection,
+                                  Q_ARG(QStringList, newList));
+    }
 }
 
 }

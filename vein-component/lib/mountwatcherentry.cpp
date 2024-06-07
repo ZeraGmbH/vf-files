@@ -26,6 +26,5 @@ bool MountWatcherEntry::create(VfCpp::VfCppEntity *entity,
 
 void MountWatcherEntry::onMountsChanged(const QStringList mounts)
 {
-    if(m_veinComponent.value() != mounts)
-        m_veinComponent.setValue(mounts);
+    m_veinComponent.setValue(mounts);
 }
