@@ -11,6 +11,12 @@ MountWatcherThread::MountWatcherThread(MountWatcherEntryBase *watcher) :
 {
 }
 
+MountWatcherThread::~MountWatcherThread()
+{
+    terminate();
+    wait();
+}
+
 void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
 {
     m_procFileMount = procFileMount;

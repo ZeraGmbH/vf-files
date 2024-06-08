@@ -11,12 +11,6 @@ MountWatcherEntryBase::MountWatcherEntryBase(QObject *parent) :
 {
 }
 
-MountWatcherEntryBase::~MountWatcherEntryBase()
-{
-    m_thread.terminate();
-    m_thread.wait();
-}
-
 bool MountWatcherEntryBase::create(const QString procFileMount, const QString mountBasePath)
 {
     // Plausis first
