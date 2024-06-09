@@ -13,42 +13,47 @@ MountWatcherThread::MountWatcherThread(MountWatcherEntryBase *watcher) :
 
 MountWatcherThread::~MountWatcherThread()
 {
-    terminate();
+    close(m_threadAlivePipeWhileOpen[0]);
+    close(m_threadAlivePipeWhileOpen[1]);
     wait();
 }
 
 void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
 {
-    m_procFileMount = procFileMount;
-    m_mountBasePath = !mountBasePath.endsWith(QStringLiteral("/")) ? mountBasePath+QStringLiteral("/") : mountBasePath;
-    start();
+    pipe(m_threadAlivePipeWhileOpen);
+    m_procFileMount.setFileName(procFileMount);
+    if(m_procFileMount.open(QIODevice::ReadOnly)) {
+        m_mountBasePath = !mountBasePath.endsWith(QStringLiteral("/")) ? mountBasePath+QStringLiteral("/") : mountBasePath;
+        start();
+    }
+    else
+        qWarning("Could not open %s", qPrintable(procFileMount));
 }
 
 void MountWatcherThread::run()
 {
-    struct pollfd ev;
-    int ret;
-
-    // QFileSystemWatcher does not work on '/etc/mtab' see [1] (that is where
-    // the deep down parts of code were taken from
+    // QFileSystemWatcher does not work on '/etc/mtab'
+    // Inspired by [1]
     // [1] https://stackoverflow.com/questions/1113176/how-could-i-detect-when-a-directory-is-mounted-with-inotify
-    QFile procFile(m_procFileMount);
-    if(procFile.open(QIODevice::ReadOnly)) {
-        // initial read
-        readProcFile(procFile);
-        // infinite loop waking poll once watched file changed
-        do {
-            ev.events = POLLERR | POLLPRI;
-            ev.fd = procFile.handle();
-            ev.revents = 0;
-            ret = poll(&ev, 1, -1);
-            lseek(procFile.handle(), 0, SEEK_SET);
-            if (ev.revents & POLLERR) {
-                // on change read
-                readProcFile(procFile);
-            }
-        } while (ret >= 0);
-    }
+
+    // initial read
+    readProcFile(m_procFileMount);
+    int ret;
+    // infinite loop waking poll once watched file changed or pipe write end closed
+    do {
+        struct pollfd fds[2];
+        fds[0] = {m_threadAlivePipeWhileOpen[1], 0, 0};
+        fds[1] = {m_procFileMount.handle(), 0, 0};
+
+        ret = poll(fds, 2, -1);
+        if(fds[0].revents & POLLERR)
+            return;
+        if(fds[1].revents & POLLERR) {
+            lseek(m_procFileMount.handle(), 0, SEEK_SET);
+            // on change read
+            readProcFile(m_procFileMount);
+        }
+    } while (ret >= 0);
 }
 
 void MountWatcherThread::readProcFile(QFile &procFile)
