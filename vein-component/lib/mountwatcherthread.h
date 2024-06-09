@@ -20,7 +20,9 @@ private:
     void readProcFile(QFile &procFile);
 
     MountWatcherEntryBase* m_watcher;
-    QString m_procFileMount;
+    QFile m_procFileMount;
+    int m_threadAlivePipeWhileOpen[2];
+
     QString m_mountBasePath;
     QStringList m_currentMounts;
 };
