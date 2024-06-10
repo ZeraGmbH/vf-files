@@ -36,36 +36,41 @@ void MountWatcherThread::run()
     // Inspired by [1]
     // [1] https://stackoverflow.com/questions/1113176/how-could-i-detect-when-a-directory-is-mounted-with-inotify
 
-    // initial read
-    readProcFile(m_procFileMount);
-    int ret;
+    readProcFile(); // initial read
     // infinite loop waking poll once watched file changed or pipe write end closed
-    do {
-        struct pollfd fds[2];
-        fds[0] = {m_threadAlivePipeWhileOpen[1], 0, 0};
-        fds[1] = {m_procFileMount.handle(), 0, 0};
+    while(true) {
+        enum {
+            PipeAlive = 0,
+            ProcContents,
+            PollCount
+        };
+        pollfd fds[PollCount];
+        fds[PipeAlive] = { m_threadAlivePipeWhileOpen[1], 0, 0 };
+        fds[ProcContents] = { m_procFileMount.handle(), 0, 0 };
 
-        ret = poll(fds, 2, -1);
-        if(fds[0].revents & POLLERR)
+        if(poll(fds, PollCount, -1) < 1) {
+            qWarning("MountWatcherThread: something went wrong on poll!");
             return;
-        if(fds[1].revents & POLLERR) {
-            lseek(m_procFileMount.handle(), 0, SEEK_SET);
-            // on change read
-            readProcFile(m_procFileMount);
         }
-    } while (ret >= 0);
+        if(fds[PipeAlive].revents & POLLERR)
+            return;
+        if(fds[ProcContents].revents & POLLERR) {
+            lseek(m_procFileMount.handle(), 0, SEEK_SET);
+            readProcFile();
+        }
+    }
 }
 
-void MountWatcherThread::readProcFile(QFile &procFile)
+void MountWatcherThread::readProcFile()
 {
-    QByteArray procfileContent = procFile.readAll();
-    QStringList newList;
+    QByteArray procfileContent = m_procFileMount.readAll();
     // https://verwaltung.uni-koeln.de/stabsstelle01/content/benutzerberatung/it_faq/windows/faqitems163122/index_ger.html
     // https://doc.qt.io/qt-6/qregularexpression.html
     // Alternatively, you can use a raw string literal, in which case you don't need to escape backslashes in the pattern,
     // all characters between R"(...)" are considered raw characters.
     QRegularExpression regEx(QStringLiteral(" ") + m_mountBasePath + QStringLiteral(R"([-_0-9A-Za-z\/\\]*)"));
     QRegularExpressionMatchIterator matchIter = regEx.globalMatch(procfileContent);
+    QStringList newList;
     while (matchIter.hasNext()) {
         QRegularExpressionMatch match = matchIter.next();
         newList.append(match.captured().replace(QStringLiteral(" "), QString()));

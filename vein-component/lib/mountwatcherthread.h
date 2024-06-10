@@ -17,7 +17,7 @@ public:
     void startWatch(const QString procFileMount, const QString &mountBasePath);
 private:
     void run() override;
-    void readProcFile(QFile &procFile);
+    void readProcFile();
 
     MountWatcherEntryBase* m_watcher;
     QFile m_procFileMount;
