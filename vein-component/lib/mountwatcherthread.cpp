@@ -52,8 +52,10 @@ void MountWatcherThread::run()
             qWarning("MountWatcherThread: something went wrong on poll!");
             return;
         }
-        if(fds[PipeAlive].revents & POLLERR)
+        if(fds[PipeAlive].revents & POLLERR) {
+            qInfo("Exit mount poll thread.");
             return;
+        }
         if(fds[ProcContents].revents & POLLERR) {
             lseek(m_procFileMount.handle(), 0, SEEK_SET);
             readProcFile();
