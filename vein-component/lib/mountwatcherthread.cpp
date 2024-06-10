@@ -57,6 +57,7 @@ void MountWatcherThread::run()
             return;
         }
         if(fds[ProcContents].revents & POLLERR) {
+            qInfo("Mounts changed: Read %s...", qPrintable(m_procFileMount.fileName()));
             lseek(m_procFileMount.handle(), 0, SEEK_SET);
             readProcFile();
         }
