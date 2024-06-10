@@ -15,10 +15,12 @@ MountWatcherThread::~MountWatcherThread()
 {
     qInfo("Close thread alive pipes.");
     close(m_threadAlivePipeWhileOpen[0]);
-    close(m_threadAlivePipeWhileOpen[1]);
     qInfo("Wait for poll thread to finish...");
-    wait();
-    qInfo("Poll thread finished.");
+    if(wait(3000))
+        qInfo("Poll thread finished.");
+    else
+        qWarning("Poll thread did not finish!");
+    close(m_threadAlivePipeWhileOpen[1]);
 }
 
 void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
