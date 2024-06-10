@@ -13,9 +13,12 @@ MountWatcherThread::MountWatcherThread(MountWatcherEntryBase *watcher) :
 
 MountWatcherThread::~MountWatcherThread()
 {
+    qInfo("Close thread alive pipes.");
     close(m_threadAlivePipeWhileOpen[0]);
     close(m_threadAlivePipeWhileOpen[1]);
+    qInfo("Wait for poll thread to finish...");
     wait();
+    qInfo("Poll thread finished.");
 }
 
 void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
@@ -32,6 +35,8 @@ void MountWatcherThread::startWatch(const QString procFileMount, const QString &
 
 void MountWatcherThread::run()
 {
+    qInfo("Start mount poll thread.");
+
     // QFileSystemWatcher does not work on '/etc/mtab'
     // Inspired by [1]
     // [1] https://stackoverflow.com/questions/1113176/how-could-i-detect-when-a-directory-is-mounted-with-inotify
@@ -52,14 +57,19 @@ void MountWatcherThread::run()
             qWarning("MountWatcherThread: something went wrong on poll!");
             return;
         }
-        if(fds[PipeAlive].revents & POLLERR) {
-            qInfo("Exit mount poll thread.");
+        if(fds[PipeAlive].revents != 0) {
+            qInfo("Exit mount poll thread. Returned events: %04X", fds[PipeAlive].revents);
             return;
         }
         if(fds[ProcContents].revents & POLLERR) {
             qInfo("Mounts changed: Read %s...", qPrintable(m_procFileMount.fileName()));
             lseek(m_procFileMount.handle(), 0, SEEK_SET);
             readProcFile();
+        }
+        else {
+            qWarning("Unhandle poll: fds[PipeAlive].revents: %04X / fds[ProcContents].revents: %04X",
+                     fds[PipeAlive].revents, fds[ProcContents].revents);
+            return;
         }
     }
 }
