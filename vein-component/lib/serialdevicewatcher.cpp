@@ -23,7 +23,7 @@ bool SerialDeviceWatcher::create(VfCpp::VfCppEntity *entity, const QString compo
 
 void SerialDeviceWatcher::onTimer()
 {
-    // Performance measurements showed that QSerialPortInfo::availablePorts()
+    /*// Performance measurements showed that QSerialPortInfo::availablePorts()
     // take ages and slows down system. So try /dev/ttyUSB* first
     QDir ttySysClassDir(QStringLiteral("/sys/class/tty"));
     ttySysClassDir.setNameFilters(QStringList("ttyUSB*"));
@@ -35,7 +35,7 @@ void SerialDeviceWatcher::onTimer()
     else if(m_usbChangeDetected) {
         m_usbChangeDetected = false;
         updateUsbSerialDevicesDetails();
-    }
+    }*/
 }
 
 void SerialDeviceWatcher::updateUsbSerialDevicesDetails()
