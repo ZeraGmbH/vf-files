@@ -17,7 +17,7 @@ target_link_libraries(VfFiles
     Qt5::SerialPort
     Zera::VfEvent
     Zera::VfComponent
-    Zera::VfStorageHash
+    Zera::VfStorage
     Zera::VfCpp
     )
 
