@@ -13,8 +13,7 @@ add_library(VfFiles SHARED
 
 target_link_libraries(VfFiles 
     PUBLIC
-    Qt5::Core
-    Qt5::SerialPort
+    ${QTX}::SerialPort
     Zera::VfEvent
     Zera::VfComponent
     Zera::VfStorage

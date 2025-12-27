@@ -1,6 +1,10 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(Qt5 REQUIRED COMPONENTS Core SerialPort CONFIG)
+if("${QT_MAJOR_VER}" STREQUAL "6")
+    find_dependency(Qt6 REQUIRED COMPONENTS Core SerialPort CONFIG)
+else()
+    find_dependency(Qt5 REQUIRED COMPONENTS Core SerialPort CONFIG)
+endif()
 find_dependency(VeinFramework REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/VfFilesTargets.cmake")

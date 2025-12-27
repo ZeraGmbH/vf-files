@@ -23,5 +23,4 @@ target_link_libraries(file-access-control-unittest
     gtest
     gtest_main
     VfFiles
-    Qt5::Core
 )
