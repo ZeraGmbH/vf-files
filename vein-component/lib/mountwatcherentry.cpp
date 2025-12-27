@@ -10,9 +10,9 @@ MountWatcherEntry::MountWatcherEntry(QObject *parent) : QObject(parent)
 }
 
 bool MountWatcherEntry::create(VfCpp::VfCppEntity *entity,
-                               const QString componentName,
-                               const QString procFileMount,
-                               const QString mountBasePath)
+                               const QString &componentName,
+                               const QString &procFileMount,
+                               const QString &mountBasePath)
 {
     connect(&m_mountWatcher, &MountWatcherEntryBase::sigMountsChanged,
             this, &MountWatcherEntry::onMountsChanged);
@@ -24,7 +24,7 @@ bool MountWatcherEntry::create(VfCpp::VfCppEntity *entity,
     return ok;
 }
 
-void MountWatcherEntry::onMountsChanged(const QStringList mounts)
+void MountWatcherEntry::onMountsChanged(const QStringList &mounts)
 {
     m_veinComponent.setValue(mounts);
 }

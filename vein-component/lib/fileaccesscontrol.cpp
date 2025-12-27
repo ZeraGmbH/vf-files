@@ -6,21 +6,20 @@ FileAccessControl::FileAccessControl()
 
 }
 
-FileAccessControl::FileAccessControl(QStringList &allowdList)
+FileAccessControl::FileAccessControl(const QStringList &allowdList)
 {
     for(const auto &str: allowdList) {
         m_allowedDirs.append(str);
     }
 }
 
-bool FileAccessControl::isFileAccessAllowed(QString fileName)
+bool FileAccessControl::isFileAccessAllowed(const QString &fileName) const
 {
     QFileInfo fileInfo(fileName);
-
     return isFolderAccessAllowed(fileInfo.absolutePath());
 }
 
-bool FileAccessControl::isFolderAccessAllowed(QString folderName)
+bool FileAccessControl::isFolderAccessAllowed(const QString &folderName) const
 {
     bool accessAllowed = false;
     QString folderPath = folderName;
@@ -36,7 +35,7 @@ bool FileAccessControl::isFolderAccessAllowed(QString folderName)
     return accessAllowed;
 }
 
-void FileAccessControl::addDirToAllowedDirList(QString dirName)
+void FileAccessControl::addDirToAllowedDirList(const QString &dirName)
 {
     m_allowedDirs.append(dirName);
 }

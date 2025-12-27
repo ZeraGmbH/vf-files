@@ -9,11 +9,11 @@ class FileAccessControl
 {
 public:
     FileAccessControl();
-    FileAccessControl(QStringList &allowdList);
+    explicit FileAccessControl(const QStringList &allowdList);
 
-    bool isFileAccessAllowed(QString fileName);
-    bool isFolderAccessAllowed(QString folderName);
-    void addDirToAllowedDirList(QString dirName);
+    bool isFileAccessAllowed(const QString &fileName) const;
+    bool isFolderAccessAllowed(const QString &folderName) const;
+    void addDirToAllowedDirList(const QString &dirName);
 private:
     QVector<QDir> m_allowedDirs;
 };

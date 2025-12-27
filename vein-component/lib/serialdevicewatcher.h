@@ -18,7 +18,7 @@ class SerialDeviceWatcher : public QObject
 public:
     explicit SerialDeviceWatcher(QObject *parent = nullptr);
     bool create(VfCpp::VfCppEntity* entity,
-                const QString componentName);
+                const QString &componentName);
 
 private:
     void onTimer();

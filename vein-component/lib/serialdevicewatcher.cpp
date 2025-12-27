@@ -8,7 +8,7 @@ SerialDeviceWatcher::SerialDeviceWatcher(QObject *parent) : QObject(parent)
 {
 }
 
-bool SerialDeviceWatcher::create(VfCpp::VfCppEntity *entity, const QString componentName)
+bool SerialDeviceWatcher::create(VfCpp::VfCppEntity *entity, const QString &componentName)
 {
     bool created = false;
     if(!m_veinComponent) {
@@ -41,8 +41,8 @@ void SerialDeviceWatcher::onTimer()
 void SerialDeviceWatcher::updateUsbSerialDevicesDetails()
 {
     QJsonObject json;
-    QList<QSerialPortInfo> portInfos = QSerialPortInfo::availablePorts();
-    for(auto portInfo : portInfos) {
+    const QList<QSerialPortInfo> portInfos = QSerialPortInfo::availablePorts();
+    for(const auto &portInfo : portInfos) {
         QString portName = portInfo.portName();
         if(portName.contains("ttyUSB")) {
             QJsonObject jsonEntry;

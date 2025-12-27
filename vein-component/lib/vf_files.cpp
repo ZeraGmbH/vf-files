@@ -467,9 +467,9 @@ QVariant vf_files::RPC_GetFileInfo(QVariantMap p_params)
     return listFileInfo;
 }
 
-bool vf_files::addDirToWatch(const QString componentName,
-                             const QString dir,
-                             const QStringList nameFilters,
+bool vf_files::addDirToWatch(const QString &componentName,
+                             const QString &dir,
+                             const QStringList &nameFilters,
                              QDir::Filters filters,
                              bool fullPathForResults)
 {
@@ -487,7 +487,7 @@ bool vf_files::addDirToWatch(const QString componentName,
     return ok;
 }
 
-bool vf_files::addMountToWatch(const QString componentName, const QString mountBasePath, const QString procFileMount)
+bool vf_files::addMountToWatch(const QString &componentName, const QString &mountBasePath, const QString &procFileMount)
 {
     bool ok = false;
     if(m_isInitalized) { // prerequisites ok?
@@ -503,7 +503,7 @@ bool vf_files::addMountToWatch(const QString componentName, const QString mountB
     return ok;
 }
 
-bool vf_files::addDefaultPathComponent(const QString componentName, const QString dir, bool createDir)
+bool vf_files::addDefaultPathComponent(const QString &componentName, const QString &dir, bool createDir)
 {
     bool ok = false;
     if(m_isInitalized) { // prerequisites ok?
@@ -519,7 +519,7 @@ bool vf_files::addDefaultPathComponent(const QString componentName, const QStrin
     return ok;
 }
 
-bool vf_files::addTtyWatcher(const QString componentName)
+bool vf_files::addTtyWatcher(const QString &componentName)
 {
     bool ok = false;
     if(m_isInitalized) { // prerequisites ok?
