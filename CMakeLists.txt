@@ -15,7 +15,10 @@ include(GNUInstallDirs)
 include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 
-find_package(Qt5 REQUIRED COMPONENTS Core SerialPort CONFIG)
+set(QT_MAJOR_VER "5" CACHE STRING "Qt major version")
+set(QTX "Qt${QT_MAJOR_VER}")
+
+find_package(${QTX} REQUIRED COMPONENTS Core SerialPort CONFIG)
 find_package(VeinFramework REQUIRED)
 
 enable_testing()
