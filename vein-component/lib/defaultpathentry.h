@@ -11,8 +11,8 @@ class DefaultPathEntry : public QObject
 public:
     explicit DefaultPathEntry(QObject *parent = nullptr);
     bool create(VfCpp::VfCppEntity* entity,
-                const QString componentName,
-                const QString path,
+                const QString &componentName,
+                const QString &path,
                 const bool create);
 };
 

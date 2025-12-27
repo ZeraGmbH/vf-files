@@ -13,12 +13,12 @@ class MountWatcherEntry : public QObject
 public:
     explicit MountWatcherEntry(QObject *parent = nullptr);
     bool create(VfCpp::VfCppEntity* entity,
-                const QString componentName,
-                const QString procFileMount,
-                const QString mountBasePath);
+                const QString &componentName,
+                const QString &procFileMount,
+                const QString &mountBasePath);
 
 public slots:
-    void onMountsChanged(const QStringList mounts);
+    void onMountsChanged(const QStringList &mounts);
 
 private:
     MountWatcherEntryBase m_mountWatcher;

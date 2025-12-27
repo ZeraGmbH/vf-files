@@ -12,9 +12,9 @@ class MountWatcherThread : public QThread
 {
     Q_OBJECT
 public:
-    MountWatcherThread(MountWatcherEntryBase* watcher);
+    explicit MountWatcherThread(MountWatcherEntryBase* watcher);
     ~MountWatcherThread() override;
-    void startWatch(const QString procFileMount, const QString &mountBasePath);
+    void startWatch(const QString &procFileMount, const QString &mountBasePath);
 private:
     void run() override;
     void readProcFile();

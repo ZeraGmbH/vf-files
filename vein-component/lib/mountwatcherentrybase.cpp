@@ -11,7 +11,7 @@ MountWatcherEntryBase::MountWatcherEntryBase(QObject *parent) :
 {
 }
 
-bool MountWatcherEntryBase::create(const QString procFileMount, const QString mountBasePath)
+bool MountWatcherEntryBase::create(const QString &procFileMount, const QString &mountBasePath)
 {
     // Plausis first
     QString strErrorMsg;

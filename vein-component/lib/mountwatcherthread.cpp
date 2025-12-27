@@ -23,7 +23,7 @@ MountWatcherThread::~MountWatcherThread()
     close(m_threadAlivePipeWhileOpen[1]);
 }
 
-void MountWatcherThread::startWatch(const QString procFileMount, const QString &mountBasePath)
+void MountWatcherThread::startWatch(const QString &procFileMount, const QString &mountBasePath)
 {
     pipe(m_threadAlivePipeWhileOpen);
     m_procFileMount.setFileName(procFileMount);

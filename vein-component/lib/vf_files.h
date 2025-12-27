@@ -61,9 +61,9 @@ public:
      * @param fullPathForResults: true: set full path in search hit list / false: just file/dir name
      * @return true on success
      */
-    bool addDirToWatch(const QString componentName,
-                       const QString dir,
-                       const QStringList nameFilters = QStringList(),
+    bool addDirToWatch(const QString &componentName,
+                       const QString &dir,
+                       const QStringList &nameFilters = QStringList(),
                        QDir::Filters filters = QDir::NoDotAndDotDot,
                        bool fullPathForResults = false);
 
@@ -75,9 +75,9 @@ public:
      * @param fullPathForResults: true: set full path in search hit list / false: just file/dir name
      * @return true on success
      */
-    bool addMountToWatch(const QString componentName,
-                         const QString mountBasePath,
-                         const QString procFileMount = QStringLiteral("/etc/mtab"));
+    bool addMountToWatch(const QString &componentName,
+                         const QString &mountBasePath,
+                         const QString &procFileMount = QStringLiteral("/etc/mtab"));
 
     /**
      * @brief addDefaultPathComponent: create a component containing a system wide default directory ending with dir separator
@@ -86,14 +86,16 @@ public:
      * @param createDir: true: create direcrory
      * @return true on success
      */
-    bool addDefaultPathComponent(const QString componentName, const QString dir, bool createDir=false);
+    bool addDefaultPathComponent(const QString &componentName,
+                                 const QString &dir,
+                                 bool createDir=false);
 
     /**
      * @brief addTtyWatcher: create a component containing JSON wia all serial ports
      * @param componentName: vein component name
      * @return
      */
-    bool addTtyWatcher(const QString componentName);
+    bool addTtyWatcher(const QString &componentName);
 
     /**
      * @brief getVeinEntity
@@ -192,7 +194,6 @@ public:
     FileAccessControl m_fac;
 
 private:
-    // TODO PIMPL
     void findInPath(const QString &baseDir,
                     const QStringList &nameFilterList,
                     const int currFilterOrPathDepth,

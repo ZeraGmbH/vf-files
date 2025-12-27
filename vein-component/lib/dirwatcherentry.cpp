@@ -7,9 +7,9 @@ DirWatcherEntry::DirWatcherEntry(QObject *parent) : QObject(parent)
 }
 
 bool DirWatcherEntry::create(VfCpp::VfCppEntity *entity,
-                             const QString componentName,
-                             const QString path,
-                             const QStringList nameFilters,
+                             const QString &componentName,
+                             const QString &path,
+                             const QStringList &nameFilters,
                              QDir::Filters filters,
                              bool fullPathForResults)
 {
