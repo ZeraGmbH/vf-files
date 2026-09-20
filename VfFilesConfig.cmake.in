@@ -2,5 +2,6 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(@QTX@ REQUIRED COMPONENTS Core SerialPort CONFIG)
 find_dependency(VeinFramework REQUIRED)
+find_dependency(simplecmdiobase REQUIRED)
 
 include("${CMAKE_CURRENT_LIST_DIR}/VfFilesTargets.cmake")

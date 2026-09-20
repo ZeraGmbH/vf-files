@@ -18,6 +18,7 @@ target_link_libraries(VfFiles
     Zera::VfComponent
     Zera::VfStorage
     Zera::VfCpp
+    simplecmdio-client
     )
 
 set_target_properties(VfFiles PROPERTIES VERSION ${PROJECT_VERSION})
@@ -45,3 +46,6 @@ install(TARGETS VfFiles
     EXPORT VfFilesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
+
+set(SET_USB_STICK_PATH "/media/" CACHE STRING "Automount path")
+add_definitions(-DUSB_STICK_PATH="${SET_USB_STICK_PATH}")
