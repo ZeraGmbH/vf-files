@@ -41,6 +41,7 @@ install(EXPORT VfFilesExport
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/VfFiles
     )
 
-add_subdirectory(vein-component)
+add_subdirectory(lib)
+add_subdirectory(tests)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
