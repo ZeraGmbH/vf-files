@@ -14,7 +14,7 @@ class QmlFileIO : public QObject
 public:
     QmlFileIO(QObject *parent=0);
     static QmlFileIO *getInstance();
-    static void registerQml();
+    static void registerQMLSingleton();
 
     Q_PROPERTY(QStringList mountedPaths READ mountedPaths NOTIFY sigMountedPathsChanged);
 

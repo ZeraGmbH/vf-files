@@ -28,7 +28,7 @@ static QmlFileIO *getQmlFileIOInstance(QQmlEngine *engine, QJSEngine *scriptEngi
     return QmlFileIO::getInstance();
 }
 
-void QmlFileIO::registerQml()
+void QmlFileIO::registerQMLSingleton()
 {
     if(m_wasRegistered)
         return;
