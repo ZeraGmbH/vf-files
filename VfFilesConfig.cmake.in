@@ -1,6 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(@QTX@ REQUIRED COMPONENTS Core SerialPort CONFIG)
+find_dependency(@QTX@ REQUIRED COMPONENTS Core SerialPort Qml CONFIG)
 find_dependency(VeinFramework REQUIRED)
 find_dependency(simplecmdiobase REQUIRED)
 

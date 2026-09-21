@@ -9,12 +9,31 @@
 #include <QDebug>
 #include <QDir>
 #include <QJsonObject>
+#include <QQmlEngine>
+
+bool QmlFileIO::m_wasRegistered = false;
+QmlFileIO *QmlFileIO::m_instance = nullptr;
 
 QmlFileIO::QmlFileIO(QObject *parent) : QObject(parent)
 {
     m_mountWatcher.create("/etc/mtab", QString(USB_STICK_PATH));
     connect(&m_mountWatcher, &vfFiles::MountWatcherEntryBase::sigMountsChanged,
             this, &QmlFileIO::onMountPathsChanged);
+}
+
+static QmlFileIO *getQmlFileIOInstance(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return QmlFileIO::getInstance();
+}
+
+void QmlFileIO::registerQml()
+{
+    if(m_wasRegistered)
+        return;
+    m_wasRegistered = true;
+    qmlRegisterSingletonType<QmlFileIO>("QmlFileIO", 1, 0, "QmlFileIO", getQmlFileIOInstance);
 }
 
 QString QmlFileIO::readTextFile(const QString &fileName)
@@ -116,9 +135,9 @@ bool QmlFileIO::writeJsonFile(const QString &fileName, const QVariant &content, 
 
 QmlFileIO *QmlFileIO::getInstance()
 {
-    if(!s_instance)
-        s_instance = new QmlFileIO;
-    return s_instance;
+    if(!m_instance)
+        m_instance = new QmlFileIO;
+    return m_instance;
 }
 
 bool QmlFileIO::checkFile(const QFile &file)
@@ -201,5 +220,3 @@ void QmlFileIO::onSimpleCmdFinish(bool ok)
     m_writingLogsToUsb = false;
     emit sigWritingLogsToUsbChanged();
 }
-
-QmlFileIO * QmlFileIO::s_instance = nullptr;

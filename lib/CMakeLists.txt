@@ -14,6 +14,7 @@ add_library(VfFiles SHARED
 target_link_libraries(VfFiles 
     PUBLIC
     ${QTX}::SerialPort
+    ${QTX}::Qml
     Zera::VfEvent
     Zera::VfComponent
     Zera::VfStorage

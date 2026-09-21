@@ -14,6 +14,7 @@ class QmlFileIO : public QObject
 public:
     QmlFileIO(QObject *parent=0);
     static QmlFileIO *getInstance();
+    static void registerQml();
 
     Q_PROPERTY(QStringList mountedPaths READ mountedPaths NOTIFY sigMountedPathsChanged);
 
@@ -48,7 +49,8 @@ private:
     bool m_writingLogsToUsb = false;
     bool m_lastWriteLogsOk = false;
     std::unique_ptr<SimpleCmdIoClient> m_simpleCmdIoClient;
-    static QmlFileIO *s_instance;
+    static QmlFileIO *m_instance;
+    static bool m_wasRegistered;
 };
 
 #endif // QMLFILEIO_H

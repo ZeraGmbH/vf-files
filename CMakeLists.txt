@@ -18,7 +18,7 @@ include(CMakePackageConfigHelpers)
 set(QT_MAJOR_VER "5" CACHE STRING "Qt major version")
 set(QTX "Qt${QT_MAJOR_VER}")
 
-find_package(${QTX} REQUIRED COMPONENTS Core SerialPort CONFIG)
+find_package(${QTX} REQUIRED COMPONENTS Core SerialPort Qml CONFIG)
 find_package(VeinFramework REQUIRED)
 find_package(simplecmdiobase REQUIRED)
 
