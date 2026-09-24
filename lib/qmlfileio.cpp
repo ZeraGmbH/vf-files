@@ -10,6 +10,7 @@
 #include <QDir>
 #include <QJsonObject>
 #include <QQmlEngine>
+#include <unistd.h>
 
 bool QmlFileIO::m_wasRegistered = false;
 QmlFileIO *QmlFileIO::m_instance = nullptr;
@@ -189,6 +190,7 @@ bool QmlFileIO::startWriteJournalctlOnUsb(QVariant versionMap, QString serverIp)
         if(jsonFile.open(QFile::WriteOnly)) {
             jsonFile.write(jsonData);
             jsonFile.close();
+            chown(qPrintable(jsonPath), 10000, 10000); // zera-setup2 is running as root / auto-journal-logger as operator (10000)
         }
         else
             jsonPath = ""; // service accepts empty version parameter
